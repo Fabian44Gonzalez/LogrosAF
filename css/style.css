@@ -1,0 +1,266 @@
+/* ===============================
+   OPCIÓN 1: ROSA PASTEL + BLANCO SUAVE
+   =============================== */
+body.op1 {
+  font-family: "Trebuchet MS", sans-serif;
+  background: #ffe6f0;
+  color: #333;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+body.op1 h1, body.op1 h2, body.op1 h3 {
+  color: #ff99b3;
+}
+
+body.op1 section {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fef6f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+body.op1 button {
+  background: #ffb6c1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+body.op1 button:hover {
+  background: #ff99b3;
+}
+
+/* ===============================
+   OPCIÓN 2: MODO OSCURO ROSA PASTEL
+   =============================== */
+body.op2 {
+  font-family: "Trebuchet MS", sans-serif;
+  background: #2a1a2b;
+  color: #f5d6e0;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+body.op2 h1, body.op2 h2, body.op2 h3 {
+  color: #ffb6c1;
+}
+
+body.op2 section {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #3d2b3c;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+body.op2 button {
+  background: #ffb6c1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+body.op2 button:hover {
+  background: #ff99b3;
+}
+
+body.op2 .form-input,
+body.op2 #detalle-notas,
+body.op2 .imagen-logro {
+  background: #502d49;
+  color: #f5d6e0;
+  border-color: #7a4b6e;
+}
+
+body.op2 .form-input::placeholder {
+  color: #ccc;
+}
+
+/* ===============================
+   BOTÓN DE TEMA
+   =============================== */
+.btn-tema {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  line-height: 40px;
+  padding: 0;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+body.op1 .btn-tema { background: #ffb6c1; color: white; }
+body.op1 .btn-tema:hover { background: #ff99b3; }
+
+body.op2 .btn-tema { background: #ffb6c1; color: white; }
+body.op2 .btn-tema:hover { background: #ff99b3; }
+
+/* ===============================
+   ESTILOS GENERALES
+   =============================== */
+ul { list-style: none; padding: 0; }
+li { margin: 8px 0; }
+
+.imagen-logro {
+  width: 200px;
+  aspect-ratio: 4 / 3;
+  margin: 10px auto;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #888;
+}
+
+.stars { font-size: 20px; color: #ccc; }
+.stars .active { color: gold; }
+
+#detalle-notas {
+  margin: 10px auto;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fefefe;
+  min-height: 50px;
+}
+
+/* ===============================
+   FORM INPUTS CONSISTENTES
+   =============================== */
+.form-input {
+  padding: 6px 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  margin: 4px 0;
+  box-sizing: border-box;
+}
+
+textarea.form-input {
+  width: 90%;
+  height: 60px;
+  resize: none;
+}
+
+/* ===============================
+   CENTRAR FORMULARIO DE NUEVO LOGRO
+   =============================== */
+#nuevo-logro-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Centramos inputs y textarea */
+#nuevo-logro-form input,
+#nuevo-logro-form textarea {
+  max-width: 300px;
+  width: 90%;
+}
+
+/* Checkbox e input de imagen alineados con texto a la izquierda */
+#nuevo-logro-form label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  width: 300px;
+  margin: 4px 0;
+}
+
+/* ===============================
+   INPUTS JUGADORES MÁS PEQUEÑOS
+   =============================== */
+#pantalla-inicial input.form-input {
+  max-width: 200px;
+  width: 100%;
+  text-align: center;
+}
+
+/* ===============================
+   BOTONES MENU LOGROS
+   =============================== */
+#botones-menu {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#botones-menu button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  background: #ffb6c1;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#botones-menu button:hover {
+  background: #ff99b3;
+}
+
+/* ===============================
+   MOBILE FRIENDLY
+   =============================== */
+@media (max-width: 600px) {
+  body.op1 section,
+  body.op2 section {
+    margin: 20px 10px;
+    padding: 15px;
+  }
+
+  .form-input {
+    max-width: 90%;
+  }
+
+  .imagen-logro {
+    width: 100%;
+    height: auto;
+    min-height: 150px;
+  }
+
+  #nuevo-logro-form label {
+    width: 90%;
+  }
+
+  #botones-menu {
+    flex-direction: column;
+    align-items: center;
+  }
+}

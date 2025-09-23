@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra Partida - Libro de Logros</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDk9SmqTIy_02mG7H5byhXqMz0xYJ6t7OA",
+      authDomain: "logrosaf-1632f.firebaseapp.com",
+      databaseURL: "https://logrosaf-1632f-default-rtdb.firebaseio.com",
+      projectId: "logrosaf-1632f",
+      storageBucket: "logrosaf-1632f.appspot.com",
+      messagingSenderId: "753688049020",
+      appId: "1:753688049020:web:98f91e31e35e077eab20f9"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+  </script>
+</head>
+<body class="op1">
+
+  <button id="btn-cambiar-tema" class="btn-tema">♡</button>
+
+  <section id="pantalla-inicial">
+    <h1>NUESTRA PARTIDA</h1>
+    <p>Jugador 1: <input type="text" id="jugador1" class="form-input" placeholder=""></p>
+    <p>Jugador 2: <input type="text" id="jugador2" class="form-input" placeholder=""></p>
+    <button id="btn-iniciar">Iniciar partida</button>
+  </section>
+
+  <section id="menu-logros" style="display:none;">
+    <h2>Logros</h2>
+    <h3>Desbloqueados</h3>
+    <ul id="logros-desbloqueados"></ul>
+    <h3>Por desbloquear</h3>
+    <ul id="logros-bloqueados"></ul>
+
+    <h3>Agregar nuevo logro</h3>
+    <div id="nuevo-logro-form">
+        <input type="text" id="nuevo-nombre" class="form-input" placeholder="Nombre del logro">
+        <input type="date" id="nueva-fecha" class="form-input" placeholder="Fecha (dd/mm/aaaa)">
+        <textarea id="nueva-nota" class="form-input" placeholder="Notas"></textarea>
+        <label>Desbloqueado: <input type="checkbox" id="nuevo-desbloqueado"></label>
+        <label>Imagen: <input type="file" id="nuevo-imagen" accept="image/*"></label>
+    </div>
+
+    <!-- Contenedor de botones alineados a la derecha -->
+    <div id="botones-menu">
+        <button id="btn-volver-inicio">Volver</button>
+        <button id="btn-agregar-logro">Añadir logro</button>
+    </div>
+  </section>
+
+  <section id="detalle-logro" style="display:none;">
+    <h2 id="detalle-titulo">Logro #X: [Nombre]</h2>
+    <div>
+      <p><strong>Imagen:</strong></p>
+      <div id="detalle-imagen" class="imagen-logro">(espacio para foto)</div>
+      <label id="label-cambiar-imagen" style="display:none;">Cambiar imagen: 
+        <input type="file" id="edit-imagen" accept="image/*">
+      </label>
+    </div>
+    <p><strong>Fecha:</strong> <span id="detalle-fecha">--/--/----</span></p>
+    <p><strong>Dificultad:</strong> <span class="stars">☆ ☆ ☆ ☆ ☆</span></p>
+    <p><strong>Notas:</strong></p>
+    <div id="detalle-notas">(aquí irán comentarios)</div>
+
+    <button id="btn-volver-menu">Volver al menú</button>
+    <button id="btn-editar-logro">Editar logro</button>
+    <button id="btn-guardar-logro" style="display:none;">Guardar cambios</button>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

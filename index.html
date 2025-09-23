@@ -4,25 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nuestra Partida - Libro de Logros</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./css/style.css">
 
   <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDk9SmqTIy_02mG7H5byhXqMz0xYJ6t7OA",
-      authDomain: "logrosaf-1632f.firebaseapp.com",
-      databaseURL: "https://logrosaf-1632f-default-rtdb.firebaseio.com",
-      projectId: "logrosaf-1632f",
-      storageBucket: "logrosaf-1632f.appspot.com",
-      messagingSenderId: "753688049020",
-      appId: "1:753688049020:web:98f91e31e35e077eab20f9"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-  </script>
 </head>
 <body class="op1">
 
@@ -51,7 +37,6 @@
         <label>Imagen: <input type="file" id="nuevo-imagen" accept="image/*"></label>
     </div>
 
-    <!-- Contenedor de botones alineados a la derecha -->
     <div id="botones-menu">
         <button id="btn-volver-inicio">Volver</button>
         <button id="btn-agregar-logro">Añadir logro</button>
@@ -77,6 +62,7 @@
     <button id="btn-guardar-logro" style="display:none;">Guardar cambios</button>
   </section>
 
-  <script src="script.js"></script>
+  <!-- Script modular -->
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>

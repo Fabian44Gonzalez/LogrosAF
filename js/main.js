@@ -43,19 +43,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Cargar logros desde Firebase
-  cargarLogrosFirebase(database, (datos) => {
-    logros.length = 0;
-    datos.forEach(l => logros.push(l));
-    renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-  });
-
-  // Iniciar partida
+cargarLogrosFirebase(database, (datos) => {
+  logros.length = 0;
+  datos.forEach(l => logros.push(l));
+  
+  // Ahora habilitamos el botón de iniciar
   btnIniciar.addEventListener("click", () => {
     if (!inputJugador1.value) inputJugador1.value = "Atenea";
     if (!inputJugador2.value) inputJugador2.value = "Fabian";
     renderizarLogros(logrosDesbloqueados, logrosBloqueados);
     mostrarMenu();
   });
+});
 
   // Agregar nuevo logro
   btnAgregarLogro.addEventListener("click", () => {

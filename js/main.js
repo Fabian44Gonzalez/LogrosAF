@@ -1,4 +1,3 @@
-// js/main.js
 import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "./firebase.js";
 import { logros, logroActual, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro } from "./logros.js";
 import { initTemaYNavegacion } from "./tema.js";
@@ -30,13 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
   const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
-  // Volver al menú
+  // Volver al menú desde el detalle
   btnVolverMenu.addEventListener("click", () => {
     detalleLogro.style.display = "none";
     menuLogros.style.display = "block";
   });
 
-  // Cargar logros y luego registrar iniciar
+  // Cargar logros desde Firebase
   cargarLogrosFirebase(database, (datos) => {
     logros.length = 0;
     datos.forEach(l => logros.push(l));
@@ -50,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Agregar nuevo logro
+  // Agregar un nuevo logro
   btnAgregarLogro.addEventListener("click", () => {
     const nombre = inputNuevoNombre.value.trim();
     const fecha = inputNuevaFecha.value.trim();
@@ -63,20 +62,28 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fecha && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) { alert("Formato de fecha inválido."); return; }
 
     let nuevoId = logros.length > 0 ? Math.max(...logros.map(l => l.id)) + 1 : 1;
-
     const nuevoLogro = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
 
     const archivo = inputNuevoImagen.files[0];
     if (archivo) {
-      if (archivo.size > 2 * 1024 * 1024) { alert("La imagen no puede superar 2MB."); return; }
+      // Convertir imagen a base64 sin restricción de tamaño
       convertirImagenABase64(archivo, (base64) => {
         nuevoLogro.imagen = base64;
-        guardarLogroEnFirebase(database, nuevoLogro, () => mostrarDetalle(nuevoLogro.id));
+        guardarLogroEnFirebase(database, nuevoLogro, () => {
+          logros.push(nuevoLogro);
+          renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+          mostrarDetalle(nuevoLogro.id);
+        });
       });
     } else {
-      guardarLogroEnFirebase(database, nuevoLogro, () => mostrarDetalle(nuevoLogro.id));
+      guardarLogroEnFirebase(database, nuevoLogro, () => {
+        logros.push(nuevoLogro);
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        mostrarDetalle(nuevoLogro.id);
+      });
     }
 
+    // Limpiar campos
     inputNuevoNombre.value = "";
     inputNuevaFecha.value = "";
     inputNuevaNota.value = "";
@@ -89,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     editarLogro();
   });
 
-  // Guardar cambios
+  // Guardar cambios de un logro
   btnGuardar.addEventListener("click", () => {
     if (!logroActual) return;
 
@@ -114,10 +121,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (archivo) {
       convertirImagenABase64(archivo, (base64) => {
         logroActual.imagen = base64;
-        guardarLogroEnFirebase(database, logroActual, () => mostrarDetalle(logroActual.id));
+        guardarLogroEnFirebase(database, logroActual, () => {
+          const index = logros.findIndex(l => l.id === logroActual.id);
+          if (index !== -1) logros[index] = logroActual;
+          renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+          mostrarDetalle(logroActual.id);
+        });
       });
     } else {
-      guardarLogroEnFirebase(database, logroActual, () => mostrarDetalle(logroActual.id));
+      guardarLogroEnFirebase(database, logroActual, () => {
+        const index = logros.findIndex(l => l.id === logroActual.id);
+        if (index !== -1) logros[index] = logroActual;
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        mostrarDetalle(logroActual.id);
+      });
     }
   });
 

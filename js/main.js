@@ -112,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const archivo = inputEditImagen.files[0];
 
     if (archivo) {
-      if (archivo.size > 2 * 1024 * 1024) { alert("La imagen no puede superar 2MB."); return; }
       convertirImagenABase64(archivo, (base64) => {
         logroActual.imagen = base64;
         guardarLogroEnFirebase(database, logroActual, () => mostrarDetalle(logroActual.id));

@@ -250,12 +250,14 @@ textarea.form-input {
   }
 
   .imagen-logro {
-    width: 100%;
+    width: 90%;
     height: auto;
-    min-height: 150px;
+    min-height: 100px;
+    margin: 10px auto;
   }
 
-  #nuevo-logro-form label {
+  #nuevo-logro-form label,
+  #editar-logro-from {
     width: 90%;
   }
 

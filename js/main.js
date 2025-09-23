@@ -5,13 +5,9 @@ import { initTemaYNavegacion } from "./tema.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Inicialización Firebase
   const database = initFirebase();
-
-  // Inicialización de tema y navegación
   const { mostrarMenu } = initTemaYNavegacion();
 
-  // Elementos DOM
   const pantallaInicial = document.getElementById("pantalla-inicial");
   const menuLogros = document.getElementById("menu-logros");
   const detalleLogro = document.getElementById("detalle-logro");
@@ -24,37 +20,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnIniciar = document.getElementById("btn-iniciar");
   const btnAgregarLogro = document.getElementById("btn-agregar-logro");
+  const btnEditarLogro = document.getElementById("btn-editar-logro");
+  const btnGuardar = document.getElementById("btn-guardar-logro");
+  const btnVolverMenu = document.getElementById("btn-volver-menu");
 
   const inputNuevoNombre = document.getElementById("nuevo-nombre");
   const inputNuevaFecha = document.getElementById("nueva-fecha");
-  const inputNuevaNota = document.getElementById("nueva-nota");
+  const inputNuevaNota = document.getElementById("nuevo-nota");
   const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
   const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
-  const btnEditarLogro = document.getElementById("btn-editar-logro");
-  const btnGuardar = document.getElementById("btn-guardar-logro");
-
-  const btnVolverMenu = document.getElementById("btn-volver-menu");
-
-  // Función para volver al menú desde detalle
+  // Volver al menú
   btnVolverMenu.addEventListener("click", () => {
     detalleLogro.style.display = "none";
     menuLogros.style.display = "block";
   });
 
-  // Cargar logros desde Firebase
-cargarLogrosFirebase(database, (datos) => {
-  logros.length = 0;
-  datos.forEach(l => logros.push(l));
-  
-  // Ahora habilitamos el botón de iniciar
-  btnIniciar.addEventListener("click", () => {
-    if (!inputJugador1.value) inputJugador1.value = "Atenea";
-    if (!inputJugador2.value) inputJugador2.value = "Fabian";
-    renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-    mostrarMenu();
+  // Cargar logros y luego registrar iniciar
+  cargarLogrosFirebase(database, (datos) => {
+    logros.length = 0;
+    datos.forEach(l => logros.push(l));
+
+    // Iniciar partida
+    btnIniciar.addEventListener("click", () => {
+      if (!inputJugador1.value) inputJugador1.value = "Atenea";
+      if (!inputJugador2.value) inputJugador2.value = "Fabian";
+      renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+      mostrarMenu();
+    });
   });
-});
 
   // Agregar nuevo logro
   btnAgregarLogro.addEventListener("click", () => {
@@ -70,13 +64,7 @@ cargarLogrosFirebase(database, (datos) => {
 
     let nuevoId = logros.length > 0 ? Math.max(...logros.map(l => l.id)) + 1 : 1;
 
-    const nuevoLogro = {
-      id: nuevoId,
-      nombre,
-      fecha: fecha || "--/--/----",
-      notas: notas || "Sin notas",
-      desbloqueado: !!desbloqueado
-    };
+    const nuevoLogro = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
 
     const archivo = inputNuevoImagen.files[0];
     if (archivo) {
@@ -96,12 +84,12 @@ cargarLogrosFirebase(database, (datos) => {
     inputNuevoImagen.value = "";
   });
 
-  // Editar logro existente
+  // Editar logro
   btnEditarLogro.addEventListener("click", () => {
     editarLogro();
   });
 
-  // Guardar cambios después de editar
+  // Guardar cambios
   btnGuardar.addEventListener("click", () => {
     if (!logroActual) return;
 
@@ -120,7 +108,6 @@ cargarLogrosFirebase(database, (datos) => {
     logroActual.notas = nuevasNotas || "Sin notas";
     logroActual.desbloqueado = desbloqueado;
 
-    // Manejo de nueva imagen
     const inputEditImagen = document.getElementById("edit-imagen");
     const archivo = inputEditImagen.files[0];
 

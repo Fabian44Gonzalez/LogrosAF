@@ -1,17 +1,13 @@
 // js/main.js
 import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "./firebase.js";
-import { logros, renderizarLogros, mostrarDetalle, convertirImagenABase64 } from "./logros.js";
+import { logros, logroActual, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro } from "./logros.js";
 import { initTemaYNavegacion } from "./tema.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const database = initFirebase();
   const { mostrarMenu } = initTemaYNavegacion();
 
-  // Elementos HTML
-  const pantallaInicial = document.getElementById("pantalla-inicial");
-  const menuLogros = document.getElementById("menu-logros");
-  const detalleLogro = document.getElementById("detalle-logro");
-
+  // Elementos del DOM
   const logrosDesbloqueados = document.getElementById("logros-desbloqueados");
   const logrosBloqueados = document.getElementById("logros-bloqueados");
 
@@ -77,4 +73,43 @@ document.addEventListener("DOMContentLoaded", () => {
     inputNuevoDesbloqueado.checked = false;
     inputNuevoImagen.value = "";
   });
+
+  // Editar logro
+  btnEditarLogro.addEventListener("click", () => {
+    editarLogro();
+  });
+
+  // Guardar logro editado
+  btnGuardar.addEventListener("click", () => {
+    if (!logroActual) return;
+
+    const nuevoNombre = document.getElementById("edit-nombre").value.trim();
+    const nuevaFecha = document.getElementById("edit-fecha").value.trim();
+    const nuevasNotas = document.getElementById("edit-notas").value.trim();
+    const desbloqueado = document.getElementById("edit-desbloqueado").checked;
+
+    if (!nuevoNombre) return alert("El nombre del logro es obligatorio.");
+    if (nuevoNombre.length > 50) return alert("El nombre no puede superar 50 caracteres.");
+    if (nuevasNotas.length > 200) return alert("Las notas no pueden superar 200 caracteres.");
+    if (nuevaFecha && !/^\d{4}-\d{2}-\d{2}$/.test(nuevaFecha)) return alert("Formato de fecha inválido.");
+
+    logroActual.nombre = nuevoNombre;
+    logroActual.fecha = nuevaFecha || "--/--/----";
+    logroActual.notas = nuevasNotas || "Sin notas";
+    logroActual.desbloqueado = desbloqueado;
+
+    const inputEditImagen = document.getElementById("edit-imagen");
+    const archivo = inputEditImagen.files[0];
+
+    if (archivo) {
+      if (archivo.size > 2 * 1024 * 1024) return alert("La imagen no puede superar 2MB.");
+      convertirImagenABase64(archivo, (base64) => {
+        logroActual.imagen = base64;
+        guardarLogroEnFirebase(database, logroActual, () => mostrarDetalle(logroActual.id));
+      });
+    } else {
+      guardarLogroEnFirebase(database, logroActual, () => mostrarDetalle(logroActual.id));
+    }
+  });
+
 });

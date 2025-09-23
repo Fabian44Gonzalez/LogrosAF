@@ -1,67 +1,76 @@
 // js/logros.js
-import { guardarLogroEnFirebase, cargarLogrosFirebase } from "./firebase.js";
+import { guardarLogroEnFirebase } from "./firebase.js";
 
 export let logros = [];
 export let logroActual = null;
 
-export const renderizarLogros = (logrosDesbloqueados, logrosBloqueados) => {
-  logrosDesbloqueados.innerHTML = "";
-  logrosBloqueados.innerHTML = "";
+// Renderizar lista de logros
+export const renderizarLogros = (desbloqueados, bloqueados) => {
+  desbloqueados.innerHTML = "";
+  bloqueados.innerHTML = "";
+
   logros.forEach((logro) => {
     const li = document.createElement("li");
     const btn = document.createElement("button");
-    btn.textContent = logro.desbloqueado
-      ? `${logro.id}. ${logro.nombre} ✅`
-      : `${logro.id}. ${logro.nombre} 🔒`;
+    btn.textContent = logro.desbloqueado ? `${logro.id}. ${logro.nombre} ✅` : `${logro.id}. ${logro.nombre} 🔒`;
     btn.addEventListener("click", () => mostrarDetalle(logro.id));
     li.appendChild(btn);
-    if (logro.desbloqueado) logrosDesbloqueados.appendChild(li);
-    else logrosBloqueados.appendChild(li);
+
+    if (logro.desbloqueado) desbloqueados.appendChild(li);
+    else bloqueados.appendChild(li);
   });
 };
 
+// Mostrar detalle de un logro
 export const mostrarDetalle = (id) => {
-  const logro = logros.find((l) => String(l.id) === String(id));
+  const logro = logros.find(l => l.id === id);
   if (!logro) return;
   logroActual = logro;
 
-  const menuLogros = document.getElementById("menu-logros");
-  const detalleLogro = document.getElementById("detalle-logro");
-
-  menuLogros.style.display = "none";
-  detalleLogro.style.display = "block";
+  document.getElementById("menu-logros").style.display = "none";
+  document.getElementById("detalle-logro").style.display = "block";
 
   document.getElementById("detalle-titulo").textContent = `Logro #${logro.id}: ${logro.nombre}`;
-
   const contenedorImagen = document.getElementById("detalle-imagen");
   contenedorImagen.innerHTML = "";
+
   if (logro.imagen) {
     const img = document.createElement("img");
     img.src = logro.imagen;
     img.style.maxWidth = "100%";
     img.style.borderRadius = "8px";
     contenedorImagen.appendChild(img);
-  } else {
-    contenedorImagen.textContent = "(espacio para foto)";
-  }
+  } else contenedorImagen.textContent = "(espacio para foto)";
 
-  const labelCambiarImagen = document.getElementById("label-cambiar-imagen");
-  labelCambiarImagen.style.display = "none";
-
+  document.getElementById("label-cambiar-imagen").style.display = "none";
   document.getElementById("detalle-fecha").textContent = logro.fecha;
   document.getElementById("detalle-notas").textContent = logro.notas;
 
   document.getElementById("btn-editar-logro").style.display = "inline-block";
   document.getElementById("btn-guardar-logro").style.display = "none";
-
-  document.getElementById("btn-volver-menu").onclick = () => {
-    detalleLogro.style.display = "none";
-    menuLogros.style.display = "block";
-  };
 };
 
+// Convertir imagen a base64
 export const convertirImagenABase64 = (file, callback) => {
   const reader = new FileReader();
   reader.onload = () => callback(reader.result);
   reader.readAsDataURL(file);
+};
+
+// Función para editar logro
+export const editarLogro = () => {
+  if (!logroActual) return;
+
+  const titulo = document.getElementById("detalle-titulo");
+  const fecha = document.getElementById("detalle-fecha");
+  const notas = document.getElementById("detalle-notas");
+
+  titulo.innerHTML = `<input type="text" id="edit-nombre" class="form-input" value="${logroActual.nombre}" maxlength="50">`;
+  fecha.innerHTML = `<input type="date" id="edit-fecha" class="form-input" value="${logroActual.fecha !== '--/--/----' ? logroActual.fecha : ''}">`;
+  notas.innerHTML = `<textarea id="edit-notas" class="form-input" maxlength="200">${logroActual.notas}</textarea>
+  <label>Desbloqueado: <input type="checkbox" id="edit-desbloqueado" ${logroActual.desbloqueado ? "checked" : ""}></label>`;
+
+  document.getElementById("label-cambiar-imagen").style.display = "block";
+  document.getElementById("btn-editar-logro").style.display = "none";
+  document.getElementById("btn-guardar-logro").style.display = "inline-block";
 };

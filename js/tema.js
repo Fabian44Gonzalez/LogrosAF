@@ -1,7 +1,7 @@
 // js/tema.js
 export const initTemaYNavegacion = () => {
-  const btnCambiarTema = document.getElementById("btn-cambiar-tema");
-  btnCambiarTema.addEventListener("click", () => {
+  const btnTema = document.getElementById("btn-cambiar-tema");
+  btnTema.addEventListener("click", () => {
     document.body.classList.toggle("op1");
     document.body.classList.toggle("op2");
   });
@@ -10,16 +10,15 @@ export const initTemaYNavegacion = () => {
   const menuLogros = document.getElementById("menu-logros");
   const btnVolverInicio = document.getElementById("btn-volver-inicio");
 
+  btnVolverInicio.addEventListener("click", () => {
+    menuLogros.style.display = "none";
+    pantallaInicial.style.display = "block";
+  });
+
   const mostrarMenu = () => {
     pantallaInicial.style.display = "none";
     menuLogros.style.display = "block";
   };
-  const volverInicio = () => {
-    menuLogros.style.display = "none";
-    pantallaInicial.style.display = "block";
-  };
 
-  btnVolverInicio.addEventListener("click", volverInicio);
-
-  return { mostrarMenu, volverInicio };
+  return { mostrarMenu };
 };

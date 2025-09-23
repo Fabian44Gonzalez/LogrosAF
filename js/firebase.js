@@ -13,8 +13,8 @@ export const initFirebase = () => {
   return firebase.database();
 };
 
-export const guardarLogroEnFirebase = (database, nuevoLogro, callback) => {
-  database.ref("logros/" + nuevoLogro.id).set(nuevoLogro, (error) => {
+export const guardarLogroEnFirebase = (database, logro, callback) => {
+  database.ref("logros/" + logro.id).set(logro, (error) => {
     if (error) alert("Error al guardar logro.");
     else if (callback) callback();
   });

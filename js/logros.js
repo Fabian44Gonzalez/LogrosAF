@@ -1,5 +1,5 @@
 // js/logros.js
-import { guardarLogroEnFirebase } from "./firebase.js";
+import { guardarLogroEnFirebase } from "firebase.js";
 
 export let logros = [];
 export let logroActual = null;

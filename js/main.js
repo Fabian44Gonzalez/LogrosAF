@@ -1,9 +1,7 @@
 // js/main.js
-import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "./firebase.js";
-import { logros, logroActual, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro } from "./logros.js";
-import { initTemaYNavegacion } from "./tema.js";
-import { editarLogro } from "./logros.js";
-
+import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "firebase.js";
+import { logros, logroActual, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro } from "logros.js";
+import { initTemaYNavegacion } from "tema.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const database = initFirebase();

@@ -1,10 +1,9 @@
 // js/logros.js
-import { guardarLogroEnFirebase } from "firebase.js";
+import { guardarLogroEnFirebase } from "./firebase.js";
 
 export let logros = [];
 export let logroActual = null;
 
-// Renderizar lista de logros
 export const renderizarLogros = (desbloqueados, bloqueados) => {
   desbloqueados.innerHTML = "";
   bloqueados.innerHTML = "";
@@ -15,13 +14,11 @@ export const renderizarLogros = (desbloqueados, bloqueados) => {
     btn.textContent = logro.desbloqueado ? `${logro.id}. ${logro.nombre} ✅` : `${logro.id}. ${logro.nombre} 🔒`;
     btn.addEventListener("click", () => mostrarDetalle(logro.id));
     li.appendChild(btn);
-
     if (logro.desbloqueado) desbloqueados.appendChild(li);
     else bloqueados.appendChild(li);
   });
 };
 
-// Mostrar detalle de un logro
 export const mostrarDetalle = (id) => {
   const logro = logros.find(l => l.id === id);
   if (!logro) return;
@@ -50,16 +47,17 @@ export const mostrarDetalle = (id) => {
   document.getElementById("btn-guardar-logro").style.display = "none";
 };
 
-// Convertir imagen a base64
 export const convertirImagenABase64 = (file, callback) => {
   const reader = new FileReader();
   reader.onload = () => callback(reader.result);
   reader.readAsDataURL(file);
 };
 
-// Función para editar logro
 export const editarLogro = () => {
-  if (!logroActual) return;
+  if (!logroActual) {
+    alert("Debes seleccionar un logro primero.");
+    return;
+  }
 
   const titulo = document.getElementById("detalle-titulo");
   const fecha = document.getElementById("detalle-fecha");

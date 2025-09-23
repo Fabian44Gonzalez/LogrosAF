@@ -1,13 +1,21 @@
 // js/main.js
-import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "firebase.js";
-import { logros, logroActual, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro } from "logros.js";
-import { initTemaYNavegacion } from "tema.js";
+import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "./firebase.js";
+import { logros, logroActual, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro } from "./logros.js";
+import { initTemaYNavegacion } from "./tema.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  // Inicialización Firebase
   const database = initFirebase();
+
+  // Inicialización de tema y navegación
   const { mostrarMenu } = initTemaYNavegacion();
 
-  // Elementos del DOM
+  // Elementos DOM
+  const pantallaInicial = document.getElementById("pantalla-inicial");
+  const menuLogros = document.getElementById("menu-logros");
+  const detalleLogro = document.getElementById("detalle-logro");
+
   const logrosDesbloqueados = document.getElementById("logros-desbloqueados");
   const logrosBloqueados = document.getElementById("logros-bloqueados");
 
@@ -26,9 +34,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnEditarLogro = document.getElementById("btn-editar-logro");
   const btnGuardar = document.getElementById("btn-guardar-logro");
 
+  const btnVolverMenu = document.getElementById("btn-volver-menu");
+
+  // Función para volver al menú desde detalle
+  btnVolverMenu.addEventListener("click", () => {
+    detalleLogro.style.display = "none";
+    menuLogros.style.display = "block";
+  });
+
   // Cargar logros desde Firebase
-  cargarLogrosFirebase(database, (data) => {
-    logros.splice(0, logros.length, ...data);
+  cargarLogrosFirebase(database, (datos) => {
+    logros.length = 0;
+    datos.forEach(l => logros.push(l));
     renderizarLogros(logrosDesbloqueados, logrosBloqueados);
   });
 
@@ -47,26 +64,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const notas = inputNuevaNota.value.trim();
     const desbloqueado = inputNuevoDesbloqueado.checked;
 
-    if (!nombre) return alert("El nombre del logro es obligatorio.");
-    if (nombre.length > 50) return alert("El nombre no puede superar 50 caracteres.");
-    if (notas.length > 200) return alert("Las notas no pueden superar 200 caracteres.");
-    if (fecha && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return alert("Formato de fecha inválido.");
+    if (!nombre) { alert("El nombre del logro es obligatorio."); return; }
+    if (nombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
+    if (notas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
+    if (fecha && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) { alert("Formato de fecha inválido."); return; }
 
-    let nuevoId = logros.length ? Math.max(...logros.map(l => l.id)) + 1 : 1;
-    const nuevoLogro = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado };
+    let nuevoId = logros.length > 0 ? Math.max(...logros.map(l => l.id)) + 1 : 1;
+
+    const nuevoLogro = {
+      id: nuevoId,
+      nombre,
+      fecha: fecha || "--/--/----",
+      notas: notas || "Sin notas",
+      desbloqueado: !!desbloqueado
+    };
 
     const archivo = inputNuevoImagen.files[0];
     if (archivo) {
-      if (archivo.size > 2 * 1024 * 1024) return alert("La imagen no puede superar 2MB.");
+      if (archivo.size > 2 * 1024 * 1024) { alert("La imagen no puede superar 2MB."); return; }
       convertirImagenABase64(archivo, (base64) => {
         nuevoLogro.imagen = base64;
-        guardarLogroEnFirebase(database, nuevoLogro, () => mostrarDetalle(nuevoId));
+        guardarLogroEnFirebase(database, nuevoLogro, () => mostrarDetalle(nuevoLogro.id));
       });
     } else {
-      guardarLogroEnFirebase(database, nuevoLogro, () => mostrarDetalle(nuevoId));
+      guardarLogroEnFirebase(database, nuevoLogro, () => mostrarDetalle(nuevoLogro.id));
     }
 
-    // Limpiar inputs
     inputNuevoNombre.value = "";
     inputNuevaFecha.value = "";
     inputNuevaNota.value = "";
@@ -74,12 +97,12 @@ document.addEventListener("DOMContentLoaded", () => {
     inputNuevoImagen.value = "";
   });
 
-  // Editar logro
+  // Editar logro existente
   btnEditarLogro.addEventListener("click", () => {
     editarLogro();
   });
 
-  // Guardar logro editado
+  // Guardar cambios después de editar
   btnGuardar.addEventListener("click", () => {
     if (!logroActual) return;
 
@@ -88,21 +111,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const nuevasNotas = document.getElementById("edit-notas").value.trim();
     const desbloqueado = document.getElementById("edit-desbloqueado").checked;
 
-    if (!nuevoNombre) return alert("El nombre del logro es obligatorio.");
-    if (nuevoNombre.length > 50) return alert("El nombre no puede superar 50 caracteres.");
-    if (nuevasNotas.length > 200) return alert("Las notas no pueden superar 200 caracteres.");
-    if (nuevaFecha && !/^\d{4}-\d{2}-\d{2}$/.test(nuevaFecha)) return alert("Formato de fecha inválido.");
+    if (!nuevoNombre) { alert("El nombre del logro es obligatorio."); return; }
+    if (nuevoNombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
+    if (nuevasNotas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
+    if (nuevaFecha && !/^\d{4}-\d{2}-\d{2}$/.test(nuevaFecha)) { alert("Formato de fecha inválido."); return; }
 
     logroActual.nombre = nuevoNombre;
     logroActual.fecha = nuevaFecha || "--/--/----";
     logroActual.notas = nuevasNotas || "Sin notas";
     logroActual.desbloqueado = desbloqueado;
 
+    // Manejo de nueva imagen
     const inputEditImagen = document.getElementById("edit-imagen");
     const archivo = inputEditImagen.files[0];
 
     if (archivo) {
-      if (archivo.size > 2 * 1024 * 1024) return alert("La imagen no puede superar 2MB.");
+      if (archivo.size > 2 * 1024 * 1024) { alert("La imagen no puede superar 2MB."); return; }
       convertirImagenABase64(archivo, (base64) => {
         logroActual.imagen = base64;
         guardarLogroEnFirebase(database, logroActual, () => mostrarDetalle(logroActual.id));

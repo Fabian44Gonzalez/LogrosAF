@@ -160,8 +160,9 @@ textarea.form-input {
 
 .btn-tema {
     position: fixed;
-    top: 10px;
-    right: 10px;
+    top: 20px;       
+    right: 20px;     
+    z-index: 1000;
     width: 40px;
     height: 40px;
     font-size: 20px;

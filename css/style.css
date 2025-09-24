@@ -1,32 +1,26 @@
-/* ===============================
-    OPCIÓN 1: TEMA CLARO (ROSA PASTEL + BLANCO SUAVE)
-    =============================== */
+/* Opción 1: Tema Claro (Minimalista) */
 :root {
-    --color-fondo: #f5f5f5; /* Blanco muy suave */
+    --color-fondo: #f9f9f9; 
     --color-card: #ffffff;
-    --color-texto: #333;
-    --color-borde: #ddd;
-    --color-principal: #ff99b3; /* Rosa pastel */
-    --color-secundario: #ffb6c1; /* Rosa más claro */
-    --color-destacado: #f5d6e0; /* Rosa más pálido */
+    --color-texto: #444;
+    --color-borde: #e0e0e0;
+    --color-principal: #ff85a2;
+    --color-secundario: #ffabc7;
+    --color-destacado: #ffeef2;
 }
 
-/* ===============================
-    OPCIÓN 2: TEMA OSCURO (TONOS CÁLIDOS)
-    =============================== */
+/* Opción 2: Tema Oscuro (Tonos fríos) */
 body.op2 {
-    --color-fondo: #2a1a2b;
-    --color-card: #3d2b3c;
-    --color-texto: #f5d6e0;
-    --color-borde: #7a4b6e;
-    --color-principal: #ffb6c1;
-    --color-secundario: #f5d6e0;
-    --color-destacado: #502d49;
+    --color-fondo: #1c1c1c; 
+    --color-card: #2c2c2c;
+    --color-texto: #f0f0f0;
+    --color-borde: #555;
+    --color-principal: #ffb6c1; 
+    --color-secundario: #f5d6e0; 
+    --color-destacado: #454545; 
 }
 
-/* ===============================
-    ESTILOS GENERALES Y LAYOUT
-    =============================== */
+/* Estilos Generales y Layout */
 body {
     font-family: "Trebuchet MS", sans-serif;
     background: var(--color-fondo);
@@ -44,46 +38,72 @@ h1, h2, h3 {
     color: var(--color-principal);
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+}
+
+body.op2 h1, body.op2 h2, body.op2 h3 {
+    letter-spacing: 3px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 section {
-    max-width: 600px;
+    max-width: 650px;
     width: 90%;
     margin: 40px auto;
     padding: 30px;
     background: var(--color-card);
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid var(--color-borde);
     text-align: center;
 }
 
 section:hover {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* ===============================
-    BOTONES Y NAVEGACIÓN
-    =============================== */
+body.op2 section {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+body.op2 section:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Botones y Navegación */
 button {
     background: var(--color-principal);
     color: white;
     border: none;
-    padding: 12px 24px;
+    padding: 14px 28px;
     margin: 8px;
-    border-radius: 8px;
+    border-radius: 50px;
     cursor: pointer;
     font-size: 16px;
-    font-weight: bold;
-    transition: background 0.3s, transform 0.2s;
+    font-weight: 600;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
     text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 button:hover {
     background: var(--color-secundario);
     transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.op2 button {
+    background: var(--color-principal);
+    color: #1c1c1c;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.op2 button:hover {
+    background: var(--color-secundario);
+    transform: translateY(-3px);
 }
 
 #btn-iniciar, #btn-guardar-logro {
@@ -97,58 +117,71 @@ button:hover {
     margin-bottom: 20px;
 }
 
-/* ===============================
-    CAMPOS DE FORMULARIO
-    =============================== */
+/* Campos de Formulario */
 .form-input {
     background: var(--color-card);
     color: var(--color-texto);
     border: 1px solid var(--color-borde);
-    padding: 10px 12px;
+    padding: 12px 16px;
     font-size: 16px;
-    border-radius: 6px;
+    border-radius: 8px;
     width: 100%;
-    max-width: 300px;
+    max-width: 320px;
     text-align: center;
-    margin: 4px 0;
+    margin: 6px 0;
     box-sizing: border-box;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .form-input:focus {
     outline: none;
     border-color: var(--color-principal);
+    box-shadow: 0 0 0 3px rgba(255, 133, 162, 0.2);
+}
+
+body.op2 .form-input {
+    background: var(--color-destacado);
+}
+
+body.op2 .form-input:focus {
+    border-color: var(--color-principal);
+    box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.3);
 }
 
 textarea.form-input {
     width: 90%;
-    height: 100px;
+    height: 120px;
     resize: vertical;
 }
 
-/* ===============================
-    VISUALIZACIÓN DE LOGROS
-    =============================== */
+/* Visualización de Logros */
 ul {
     list-style: none;
     padding: 0;
 }
 
 li {
-    margin: 8px 0;
-    transition: transform 0.2s;
+    margin: 10px 0;
+    transition: transform 0.2s, background 0.2s;
+    padding: 8px;
+    border-radius: 6px;
 }
 
 li:hover {
     transform: translateX(5px);
+    background: rgba(255, 133, 162, 0.1);
+}
+
+body.op2 li:hover {
+    background: rgba(255, 182, 193, 0.1);
 }
 
 .imagen-logro {
-    width: 200px;
+    width: 220px;
     aspect-ratio: 4 / 3;
-    margin: 10px auto;
+    margin: 15px auto;
     border: 2px dashed var(--color-borde);
-    border-radius: 8px;
+    border-radius: 10px;
     background: var(--color-destacado);
     display: flex;
     justify-content: center;
@@ -157,27 +190,34 @@ li:hover {
     color: var(--color-texto);
 }
 
-#detalle-notas {
-    margin: 10px auto;
-    text-align: left;
-    padding: 10px;
-    border: 1px solid var(--color-borde);
-    border-radius: 6px;
-    background: var(--color-card);
-    min-height: 50px;
+body.op2 .imagen-logro {
+    background: var(--color-destacado);
 }
 
-/* ===============================
-    BOTÓN DE TEMA
-    =============================== */
+#detalle-notas {
+    margin: 15px auto;
+    text-align: left;
+    padding: 12px;
+    border: 1px solid var(--color-borde);
+    border-left: 5px solid var(--color-principal);
+    border-radius: 6px;
+    background: var(--color-card);
+    min-height: 60px;
+}
+
+body.op2 #detalle-notas {
+    background: var(--color-card);
+}
+
+/* Botón de Tema */
 .btn-tema {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 25px;
+    right: 25px;
     z-index: 1000;
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
@@ -194,9 +234,13 @@ li:hover {
     transform: scale(1.1);
 }
 
-/* ===============================
-    ADAPTABILIDAD (MOBILE)
-    =============================== */
+body.op2 .btn-tema {
+    background: var(--color-principal);
+    color: #1c1c1c;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Adaptabilidad (Mobile) */
 @media (max-width: 600px) {
     section {
         margin: 20px 10px;
@@ -214,9 +258,10 @@ li:hover {
     }
 
     .btn-tema {
-        top: 10px;
-        right: 10px;
+        top: 15px;
+        right: 15px;
         width: 40px;
         height: 40px;
+        font-size: 18px;
     }
 }

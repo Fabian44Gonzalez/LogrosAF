@@ -246,11 +246,22 @@ body.op2 .contenedor-imagen, body.op2 .imagen-logro {
     border-left: 5px solid var(--color-principal);
     border-radius: 6px;
     background: var(--color-card);
-    min-height: 60px;
+    min-height: 80px;              /* recuadro con altura mínima */
+    line-height: 1.4;
+    white-space: pre-wrap;         /* respeta saltos de línea */
+    overflow-wrap: anywhere;       /* evita que palabras largas corten el layout */
+    word-break: break-word;        /* compatibilidad extra */
+    box-sizing: border-box;
 }
 
 body.op2 #detalle-notas {
     background: var(--color-card);
+}
+
+.notas-titulo {
+    margin: 8px 0 6px;
+    text-align: left;
+    font-weight: 600;
 }
 
 /* Botón de Tema */

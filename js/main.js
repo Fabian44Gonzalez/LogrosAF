@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const btnIniciar = document.getElementById("btn-iniciar");
     const btnAgregarLogro = document.getElementById("btn-agregar-logro");
     const btnEditarLogro = document.getElementById("btn-editar-logro");
-    const btnGuardar = document.getElementById("btn-guardar-logro");
+    const btnGuardar = document.getElementById("btn-guardar-lo_ro");
     const btnVolverMenuDetalle = document.getElementById("btn-volver-menu");
     const btnVolverInicio = document.getElementById("btn-volver-inicio");
 
@@ -29,12 +29,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
     const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
+    // Función para mostrar el menú principal
     const mostrarMenu = () => {
         pantallaInicial.style.display = "none";
         menuLogros.style.display = "block";
         detalleLogro.style.display = "none";
     };
 
+    // Event listeners
     btnIniciar.addEventListener("click", () => {
         if (!inputJugador1.value) inputJugador1.value = "Atenea";
         if (!inputJugador2.value) inputJugador2.value = "Fabian";

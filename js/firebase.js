@@ -36,7 +36,9 @@ export async function cargarLogrosFirebase(database) {
 export async function guardarLogroEnFirebase(database, logro) {
     if (logro.firebaseId) {
         // Si el logro ya tiene un ID de Firebase, lo actualizamos
-        await database.ref("logros/" + logro.firebaseId).set(logro);
+        const updates = {};
+        updates['/logros/' + logro.firebaseId] = logro;
+        await database.ref().update(updates);
     } else {
         // Si no tiene, es un logro nuevo, lo creamos con un ID único
         const newRef = database.ref("logros").push();

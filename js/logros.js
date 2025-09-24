@@ -52,7 +52,7 @@ export function mostrarDetalle(firebaseId) {
     document.getElementById("detalle-notas").textContent = logro.notas;
 
     document.getElementById("btn-editar-logro").style.display = "inline-block";
-    document.getElementById("btn-guardar-logro").style.display = "none";
+    document.getElementById("btn-guardar-lo_ro").style.display = "none";
 }
 
 // Volver a mostrar detalle después de guardar
@@ -74,7 +74,7 @@ export function volverAMostrarDetalle(firebaseId) {
 
     document.getElementById("label-cambiar-imagen").style.display = "none";
     document.getElementById("btn-editar-logro").style.display = "inline-block";
-    document.getElementById("btn-guardar-logro").style.display = "none";
+    document.getElementById("btn-guardar-lo_ro").style.display = "none";
 }
 
 // Convertir imagen a Base64
@@ -104,6 +104,6 @@ export function editarLogro(logro) {
     `;
 
     document.getElementById("label-cambiar-imagen").style.display = "block";
-    document.getElementById("btn-editar-logro").style.display = "none";
-    document.getElementById("btn-guardar-logro").style.display = "inline-block";
+    document.getElementById("btn-editar-lo_ro").style.display = "none";
+    document.getElementById("btn-guardar-lo_ro").style.display = "inline-block";
 }

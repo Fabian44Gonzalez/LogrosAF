@@ -1,10 +1,10 @@
-import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "./firebase.js";
-import { logros, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro, logroActual } from "./logros.js";
-import { initTemaYNavegacion } from "./tema.js";
+import { guardarLogroEnFirebase, cargarLogrosFirebase } from "./firebase.js";
+import { logros, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro, volverAMostrarDetalle, logroActual, setLogroActual } from "./logros.js";
+import { initTema } from "./tema.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const database = initFirebase();
-    const { mostrarMenu } = initTemaYNavegacion();
+    const database = firebase.database();
+    initTema();
 
     const pantallaInicial = document.getElementById("pantalla-inicial");
     const menuLogros = document.getElementById("menu-logros");
@@ -29,52 +29,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
     const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
-    // Función para volver al menú de logros desde detalle
-    const volverAlMenu = () => {
-        detalleLogro.style.display = "none";
+    const mostrarMenu = () => {
+        pantallaInicial.style.display = "none";
         menuLogros.style.display = "block";
+        detalleLogro.style.display = "none";
     };
 
-    // Función para volver al inicio desde el menú
-    const volverAlInicio = () => {
-        menuLogros.style.display = "none";
-        pantallaInicial.style.display = "block";
-    };
-
-    // Limpiar los campos de "Agregar nuevo logro"
-    const limpiarCampos = () => {
-        inputNuevoNombre.value = "";
-        inputNuevaFecha.value = "";
-        inputNuevaNota.value = "";
-        inputNuevoDesbloqueado.checked = false;
-        inputNuevoImagen.value = "";
-    };
-
-    // Event listeners
     btnIniciar.addEventListener("click", () => {
         if (!inputJugador1.value) inputJugador1.value = "Atenea";
         if (!inputJugador2.value) inputJugador2.value = "Fabian";
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados); // renderizar logros cargados
         mostrarMenu();
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
     });
 
-    btnVolverMenuDetalle.addEventListener("click", volverAlMenu);
-    btnVolverInicio.addEventListener("click", volverAlInicio);
+    btnVolverMenuDetalle.addEventListener("click", () => {
+        mostrarMenu();
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+    });
+    btnVolverInicio.addEventListener("click", () => {
+        menuLogros.style.display = "none";
+        pantallaInicial.style.display = "block";
+    });
 
     btnAgregarLogro.addEventListener("click", async () => {
         const nombre = inputNuevoNombre.value.trim();
         const fecha = inputNuevaFecha.value.trim();
-        const notas = inputNuevoNota.value.trim();
+        const notas = inputNuevaNota.value.trim();
         const desbloqueado = inputNuevoDesbloqueado.checked;
 
         if (!nombre) { alert("El nombre del logro es obligatorio."); return; }
         if (nombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
         if (notas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
-        if (fecha && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) { alert("Formato de fecha inválido."); return; }
 
-        let nuevoId = logros.length > 0 ? Math.max(...logros.map(l => l.id)) + 1 : 1;
-        const nuevoLogro = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
-
+        let nuevoLogro = { nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
+        
         const archivo = inputNuevoImagen.files[0];
         if (archivo) {
             try {
@@ -88,9 +76,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
             await guardarLogroEnFirebase(database, nuevoLogro);
-            logros.push(nuevoLogro);
+            const datos = await cargarLogrosFirebase(database);
+            logros.length = 0;
+            datos.forEach(l => logros.push(l));
             renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-            mostrarDetalle(nuevoLogro.id);
+            mostrarDetalle(nuevoLogro.firebaseId);
             limpiarCampos();
         } catch (error) {
             console.error("Error al guardar el logro:", error);
@@ -99,12 +89,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     btnEditarLogro.addEventListener("click", () => {
-        editarLogro();
+        if (!logroActual) return;
+        editarLogro(logroActual);
     });
 
     btnGuardar.addEventListener("click", async () => {
         if (!logroActual) return;
-
+        
         const nuevoNombre = document.getElementById("edit-nombre").value.trim();
         const nuevaFecha = document.getElementById("edit-fecha").value.trim();
         const nuevasNotas = document.getElementById("edit-notas").value.trim();
@@ -113,13 +104,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!nuevoNombre) { alert("El nombre del logro es obligatorio."); return; }
         if (nuevoNombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
         if (nuevasNotas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
-        if (nuevaFecha && !/^\d{4}-\d{2}-\d{2}$/.test(nuevaFecha)) { alert("Formato de fecha inválido."); return; }
 
         logroActual.nombre = nuevoNombre;
         logroActual.fecha = nuevaFecha || "--/--/----";
         logroActual.notas = nuevasNotas || "Sin notas";
         logroActual.desbloqueado = desbloqueado;
-
+        
         const inputEditImagen = document.getElementById("edit-imagen");
         const archivo = inputEditImagen.files[0];
 
@@ -135,22 +125,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
             await guardarLogroEnFirebase(database, logroActual);
-            const index = logros.findIndex(l => l.id === logroActual.id);
-            if (index !== -1) logros[index] = logroActual;
+            const datos = await cargarLogrosFirebase(database);
+            logros.length = 0;
+            datos.forEach(l => logros.push(l));
             renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-            mostrarDetalle(logroActual.id);
+            volverAMostrarDetalle(logroActual.firebaseId);
         } catch (error) {
             console.error("Error al guardar el logro:", error);
             alert("Ocurrió un error al guardar los cambios.");
         }
     });
 
-    // Cargar logros desde Firebase al inicio
+    const limpiarCampos = () => {
+        inputNuevoNombre.value = "";
+        inputNuevaFecha.value = "";
+        inputNuevaNota.value = "";
+        inputNuevoDesbloqueado.checked = false;
+        inputNuevoImagen.value = "";
+    };
+
     try {
         const datos = await cargarLogrosFirebase(database);
         logros.length = 0;
         datos.forEach(l => logros.push(l));
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados); // ✅ render inicial
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
     } catch (error) {
         console.error("Error al cargar los logros:", error);
         alert("Ocurrió un error al cargar los logros.");

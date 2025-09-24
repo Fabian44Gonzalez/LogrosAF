@@ -1,5 +1,3 @@
-// js/logros.js
-
 export const logros = [];
 export let logroActual = null;
 
@@ -39,6 +37,7 @@ export function mostrarDetalle(id) {
     if (logro.imagen) {
         const img = document.createElement("img");
         img.src = logro.imagen;
+        img.alt = `Imagen del logro "${logro.nombre}"`; // ✅ alt agregado
         img.style.maxWidth = "100%";
         img.style.borderRadius = "8px";
         contenedorImagen.appendChild(img);
@@ -74,7 +73,9 @@ export function editarLogro() {
     const fecha = document.getElementById("detalle-fecha");
     const notas = document.getElementById("detalle-notas");
 
-    titulo.innerHTML = `<input type="text" id="edit-nombre" class="form-input" value="${logroActual.nombre}" maxlength="50">`;
+    // ✅ Mantener el "Logro #X:" fijo y solo volver editable el nombre
+    titulo.innerHTML = `Logro #${logroActual.id}: <input type="text" id="edit-nombre" class="form-input" value="${logroActual.nombre}" maxlength="50">`;
+
     fecha.innerHTML = `<input type="date" id="edit-fecha" class="form-input" value="${logroActual.fecha !== '--/--/----' ? logroActual.fecha : ''}">`;
     notas.innerHTML = `
         <textarea id="edit-notas" class="form-input" maxlength="200">${logroActual.notas}</textarea>

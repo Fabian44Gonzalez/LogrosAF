@@ -1,5 +1,3 @@
-// js/firebase.js
-
 export function initFirebase() {
     const firebaseConfig = {
         apiKey: "AIzaSyDk9SmqTIy_02mG7H5byhXqMz0xYJ6t7OA",
@@ -15,29 +13,17 @@ export function initFirebase() {
     return firebase.database();
 }
 
-// Ahora la función devuelve una promesa y se maneja con async/await
-export function cargarLogrosFirebase(database) {
-    return new Promise((resolve, reject) => {
-        database.ref("logros").once("value", snapshot => {
-            const datos = [];
-            snapshot.forEach(child => {
-                datos.push({ id: Number(child.key), ...child.val() });
-            });
-            resolve(datos);
-        }, reject);
+// Cargar logros desde Firebase usando async/await
+export async function cargarLogrosFirebase(database) {
+    const snapshot = await database.ref("logros").once("value");
+    const datos = [];
+    snapshot.forEach(child => {
+        datos.push({ id: Number(child.key), ...child.val() });
     });
+    return datos;
 }
 
-// Ahora la función devuelve una promesa y se maneja con async/await
-export function guardarLogroEnFirebase(database, logro) {
-    return new Promise((resolve, reject) => {
-        database.ref("logros/" + logro.id).set(logro, error => {
-            if (error) {
-                alert("Error al guardar logro.");
-                reject(error);
-            } else {
-                resolve();
-            }
-        });
-    });
+// Guardar logro en Firebase usando async/await
+export async function guardarLogroEnFirebase(database, logro) {
+    await database.ref("logros/" + logro.id).set(logro);
 }

@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const inputNuevoNombre = document.getElementById("nuevo-nombre");
     const inputNuevaFecha = document.getElementById("nueva-fecha");
-    const inputNuevaNota = document.getElementById("nuevo-nota");
+    const inputNuevaNota = document.getElementById("nueva-nota");
     const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
     const inputNuevoImagen = document.getElementById("nuevo-imagen");
 

@@ -1,9 +1,8 @@
 import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "./firebase.js";
-import { logros, logroActual, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro } from "./logros.js";
+import { logros, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro, logroActual } from "./logros.js";
 import { initTemaYNavegacion } from "./tema.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-
     const database = initFirebase();
     const { mostrarMenu } = initTemaYNavegacion();
 
@@ -29,9 +28,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
     const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
-    // Event listeners
-    // Aquí es donde deben estar, fuera de la lógica de carga de datos.
+    // Función para volver al menú de logros
+    const volverAlMenu = () => {
+        detalleLogro.style.display = "none";
+        menuLogros.style.display = "block";
+    };
 
+    // Función para limpiar los campos de "Agregar nuevo logro"
+    const limpiarCampos = () => {
+        inputNuevoNombre.value = "";
+        inputNuevaFecha.value = "";
+        inputNuevaNota.value = "";
+        inputNuevoDesbloqueado.checked = false;
+        inputNuevoImagen.value = "";
+    };
+
+    // Event listeners principales
     btnIniciar.addEventListener("click", () => {
         if (!inputJugador1.value) inputJugador1.value = "Atenea";
         if (!inputJugador2.value) inputJugador2.value = "Fabian";
@@ -39,10 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         mostrarMenu();
     });
 
-    btnVolverMenu.addEventListener("click", () => {
-        detalleLogro.style.display = "none";
-        menuLogros.style.display = "block";
-    });
+    btnVolverMenu.addEventListener("click", volverAlMenu);
 
     btnAgregarLogro.addEventListener("click", async () => {
         const nombre = inputNuevoNombre.value.trim();
@@ -74,13 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             logros.push(nuevoLogro);
             renderizarLogros(logrosDesbloqueados, logrosBloqueados);
             mostrarDetalle(nuevoLogro.id);
-
-            // Limpiar campos
-            inputNuevoNombre.value = "";
-            inputNuevaFecha.value = "";
-            inputNuevaNota.value = "";
-            inputNuevoDesbloqueado.checked = false;
-            inputNuevoImagen.value = "";
+            limpiarCampos();
         } catch (error) {
             console.error("Error al guardar el logro:", error);
             alert("Ocurrió un error al guardar el logro.");

@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const btnAgregarLogro = document.getElementById("btn-agregar-logro");
     const btnEditarLogro = document.getElementById("btn-editar-logro");
     const btnGuardar = document.getElementById("btn-guardar-logro");
-    const btnVolverMenu = document.getElementById("btn-volver-menu");
+    const btnVolverMenuDetalle = document.getElementById("btn-volver-menu");
+    const btnVolverInicio = document.getElementById("btn-volver-inicio");
 
     const inputNuevoNombre = document.getElementById("nuevo-nombre");
     const inputNuevaFecha = document.getElementById("nueva-fecha");
@@ -28,13 +29,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
     const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
-    // Función para volver al menú de logros
+    // Función para volver al menú de logros desde detalle
     const volverAlMenu = () => {
         detalleLogro.style.display = "none";
         menuLogros.style.display = "block";
     };
 
-    // Función para limpiar los campos de "Agregar nuevo logro"
+    // Función para volver al inicio desde el menú
+    const volverAlInicio = () => {
+        menuLogros.style.display = "none";
+        pantallaInicial.style.display = "block";
+    };
+
+    // Limpiar los campos de "Agregar nuevo logro"
     const limpiarCampos = () => {
         inputNuevoNombre.value = "";
         inputNuevaFecha.value = "";
@@ -43,20 +50,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         inputNuevoImagen.value = "";
     };
 
-    // Event listeners principales
+    // Event listeners
     btnIniciar.addEventListener("click", () => {
         if (!inputJugador1.value) inputJugador1.value = "Atenea";
         if (!inputJugador2.value) inputJugador2.value = "Fabian";
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados); // renderizar logros cargados
         mostrarMenu();
     });
 
-    btnVolverMenu.addEventListener("click", volverAlMenu);
+    btnVolverMenuDetalle.addEventListener("click", volverAlMenu);
+    btnVolverInicio.addEventListener("click", volverAlInicio);
 
     btnAgregarLogro.addEventListener("click", async () => {
         const nombre = inputNuevoNombre.value.trim();
         const fecha = inputNuevaFecha.value.trim();
-        const notas = inputNuevaNota.value.trim();
+        const notas = inputNuevoNota.value.trim();
         const desbloqueado = inputNuevoDesbloqueado.checked;
 
         if (!nombre) { alert("El nombre del logro es obligatorio."); return; }
@@ -137,11 +145,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Cargar logros desde Firebase
+    // Cargar logros desde Firebase al inicio
     try {
         const datos = await cargarLogrosFirebase(database);
         logros.length = 0;
         datos.forEach(l => logros.push(l));
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados); // ✅ render inicial
     } catch (error) {
         console.error("Error al cargar los logros:", error);
         alert("Ocurrió un error al cargar los logros.");

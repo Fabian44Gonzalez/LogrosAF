@@ -55,10 +55,52 @@ export function mostrarDetalle(id) {
 
     document.getElementById("label-cambiar-imagen").style.display = "none";
     document.getElementById("detalle-fecha").textContent = logro.fecha;
+
+    // Renderizar dificultad (estrellas)
+    renderEstrellasDetalle(logro.dificultad || 0);
+
+    // Notas
     document.getElementById("detalle-notas").textContent = logro.notas;
 
     document.getElementById("btn-editar-logro").style.display = "inline-block";
     document.getElementById("btn-guardar-logro").style.display = "none";
+}
+
+function renderEstrellasDetalle(valor) {
+    const cont = document.getElementById("detalle-dificultad");
+    cont.innerHTML = "";
+    for (let i = 1; i <= 5; i++) {
+        const span = document.createElement("span");
+        span.className = `estrella ${i <= valor ? 'activa' : ''}`;
+        span.textContent = "★"; // mostramos estrellas llenas/ vacías por color
+        cont.appendChild(span);
+    }
+}
+
+function renderEstrellasEditable(valorInicial = 0) {
+    const cont = document.getElementById("detalle-dificultad");
+    cont.innerHTML = "";
+    cont.classList.add('editable');
+    for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `estrella ${i <= valorInicial ? 'activa' : ''}`;
+        btn.textContent = "★";
+        btn.style.cursor = 'pointer';
+        btn.setAttribute('aria-label', `${i} de 5`);
+        btn.addEventListener('click', () => {
+            // Activar hasta i
+            const estrellas = cont.querySelectorAll('.estrella');
+            estrellas.forEach((el, idx) => {
+                if (idx < i) el.classList.add('activa');
+                else el.classList.remove('activa');
+            });
+            cont.dataset.valor = String(i);
+        });
+        cont.appendChild(btn);
+    }
+    // Guardar valor
+    cont.dataset.valor = String(valorInicial || 0);
 }
 
 // Editar un logro existente
@@ -77,6 +119,9 @@ export function editarLogro(logro) {
         <label>Desbloqueado: <input type="checkbox" id="edit-desbloqueado" ${logro.desbloqueado ? "checked" : ""}></label>
     `;
 
+    // Estrellas editables
+    renderEstrellasEditable(Number(logro.dificultad) || 0);
+
     document.getElementById("label-cambiar-imagen").style.display = "block";
     document.getElementById("btn-editar-logro").style.display = "none";
     document.getElementById("btn-guardar-logro").style.display = "inline-block";
@@ -90,6 +135,9 @@ export function volverAMostrarDetalle(id) {
     document.getElementById("detalle-titulo").textContent = `Logro: ${logro.nombre}`;
     document.getElementById("detalle-fecha").textContent = logro.fecha;
     document.getElementById("detalle-notas").textContent = logro.notas;
+
+    // Renderizar dificultad
+    renderEstrellasDetalle(Number(logro.dificultad) || 0);
     
     // Ocultar los campos de edición
     const detalleContenedor = document.getElementById('detalle-logro');

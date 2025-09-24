@@ -84,7 +84,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const maxId = logros.length > 0 ? Math.max(...logros.map(l => Number(l.id) || 0)) : 0;
             const nuevoId = maxId + 1;
 
-            let nuevoLogroObj = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
+            // Dificultad por defecto 0 (sin estrellas) en creación
+            let nuevoLogroObj = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado, dificultad: 0 };
 
             const archivo = inputNuevoImagen.files[0];
             if (archivo) {
@@ -132,6 +133,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const nuevasNotas = document.getElementById("edit-notas").value.trim();
         const desbloqueado = document.getElementById("edit-desbloqueado").checked;
 
+        // Leer dificultad elegida en estrellas (dataset.valor)
+        const contDificultad = document.getElementById("detalle-dificultad");
+        const nuevaDificultad = Number(contDificultad?.dataset?.valor || 0);
+
         if (!nuevoNombre) { alert("El nombre del logro es obligatorio."); return; }
         if (nuevoNombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
         if (nuevasNotas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
@@ -148,6 +153,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             logroActual.fecha = nuevaFecha || "--/--/----";
             logroActual.notas = nuevasNotas || "Sin notas";
             logroActual.desbloqueado = desbloqueado;
+            logroActual.dificultad = nuevaDificultad; // persistir dificultad
 
             const inputEditImagen = document.getElementById("edit-imagen");
             const archivo = inputEditImagen.files[0];

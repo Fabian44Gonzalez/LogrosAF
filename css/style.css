@@ -264,6 +264,34 @@ body.op2 #detalle-notas {
     font-weight: 600;
 }
 
+/* Estrellas de dificultad */
+.dificultad-titulo {
+    margin: 8px 0 6px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.estrellas {
+    display: inline-flex;
+    gap: 4px;
+    font-size: 24px;            /* tamaño visual de estrellas */
+    line-height: 1;
+    user-select: none;
+    margin: 8px 0 10px;         /* espaciado vertical sin título */
+}
+
+.estrella {
+    cursor: default;             /* en detalle (no edición) */
+    color: #c9c9c9;              /* color vacío */
+    transition: color 0.2s ease;
+}
+
+.estrella.activa {               /* estrellas llenas */
+    color: #f2c200;              /* amarillo */
+}
+
+/* En modo edición, habilitaremos cursor pointer vía JS o clase si quieres */
+
 /* Botón de Tema */
 .btn-tema {
     position: fixed;

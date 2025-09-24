@@ -2,140 +2,122 @@ import { initFirebase, guardarLogroEnFirebase, cargarLogrosFirebase } from "./fi
 import { logros, logroActual, renderizarLogros, mostrarDetalle, convertirImagenABase64, editarLogro } from "./logros.js";
 import { initTemaYNavegacion } from "./tema.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
-  const database = initFirebase();
-  const { mostrarMenu } = initTemaYNavegacion();
+    const database = initFirebase();
+    const { mostrarMenu } = initTemaYNavegacion();
 
-  const pantallaInicial = document.getElementById("pantalla-inicial");
-  const menuLogros = document.getElementById("menu-logros");
-  const detalleLogro = document.getElementById("detalle-logro");
+    const pantallaInicial = document.getElementById("pantalla-inicial");
+    const menuLogros = document.getElementById("menu-logros");
+    const detalleLogro = document.getElementById("detalle-logro");
 
-  const logrosDesbloqueados = document.getElementById("logros-desbloqueados");
-  const logrosBloqueados = document.getElementById("logros-bloqueados");
+    const logrosDesbloqueados = document.getElementById("logros-desbloqueados");
+    const logrosBloqueados = document.getElementById("logros-bloqueados");
 
-  const inputJugador1 = document.getElementById("jugador1");
-  const inputJugador2 = document.getElementById("jugador2");
+    const inputJugador1 = document.getElementById("jugador1");
+    const inputJugador2 = document.getElementById("jugador2");
 
-  const btnIniciar = document.getElementById("btn-iniciar");
-  const btnAgregarLogro = document.getElementById("btn-agregar-logro");
-  const btnEditarLogro = document.getElementById("btn-editar-logro");
-  const btnGuardar = document.getElementById("btn-guardar-logro");
-  const btnVolverMenu = document.getElementById("btn-volver-menu");
+    const btnIniciar = document.getElementById("btn-iniciar");
+    const btnAgregarLogro = document.getElementById("btn-agregar-logro");
+    const btnEditarLogro = document.getElementById("btn-editar-logro");
+    const btnGuardar = document.getElementById("btn-guardar-logro");
+    const btnVolverMenu = document.getElementById("btn-volver-menu");
 
-  const inputNuevoNombre = document.getElementById("nuevo-nombre");
-  const inputNuevaFecha = document.getElementById("nueva-fecha");
-  const inputNuevaNota = document.getElementById("nuevo-nota");
-  const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
-  const inputNuevoImagen = document.getElementById("nuevo-imagen");
+    const inputNuevoNombre = document.getElementById("nuevo-nombre");
+    const inputNuevaFecha = document.getElementById("nueva-fecha");
+    const inputNuevaNota = document.getElementById("nuevo-nota");
+    const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
+    const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
-  // Volver al menú desde el detalle
-  btnVolverMenu.addEventListener("click", () => {
-    detalleLogro.style.display = "none";
-    menuLogros.style.display = "block";
-  });
-
-  // Cargar logros desde Firebase
-  cargarLogrosFirebase(database, (datos) => {
-    logros.length = 0;
-    datos.forEach(l => logros.push(l));
-
-    // Iniciar partida
-    btnIniciar.addEventListener("click", () => {
-      if (!inputJugador1.value) inputJugador1.value = "Atenea";
-      if (!inputJugador2.value) inputJugador2.value = "Fabian";
-      renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-      mostrarMenu();
+    // Volver al menú desde el detalle
+    btnVolverMenu.addEventListener("click", () => {
+        detalleLogro.style.display = "none";
+        menuLogros.style.display = "block";
     });
-  });
 
-  // Agregar un nuevo logro
-  btnAgregarLogro.addEventListener("click", () => {
-    const nombre = inputNuevoNombre.value.trim();
-    const fecha = inputNuevaFecha.value.trim();
-    const notas = inputNuevaNota.value.trim();
-    const desbloqueado = inputNuevoDesbloqueado.checked;
+    // Cargar logros desde Firebase de forma asíncrona
+    try {
+        const datos = await cargarLogrosFirebase(database);
+        logros.length = 0;
+        datos.forEach(l => logros.push(l));
 
-    if (!nombre) { alert("El nombre del logro es obligatorio."); return; }
-    if (nombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
-    if (notas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
-    if (fecha && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) { alert("Formato de fecha inválido."); return; }
-
-    let nuevoId = logros.length > 0 ? Math.max(...logros.map(l => l.id)) + 1 : 1;
-    const nuevoLogro = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
-
-    const archivo = inputNuevoImagen.files[0];
-    if (archivo) {
-      // Convertir imagen a base64 sin restricción de tamaño
-      convertirImagenABase64(archivo, (base64) => {
-        nuevoLogro.imagen = base64;
-        guardarLogroEnFirebase(database, nuevoLogro, () => {
-          logros.push(nuevoLogro);
-          renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-          mostrarDetalle(nuevoLogro.id);
+        // Iniciar partida
+        btnIniciar.addEventListener("click", () => {
+            if (!inputJugador1.value) inputJugador1.value = "Atenea";
+            if (!inputJugador2.value) inputJugador2.value = "Fabian";
+            renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+            mostrarMenu();
         });
-      });
-    } else {
-      guardarLogroEnFirebase(database, nuevoLogro, () => {
-        logros.push(nuevoLogro);
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-        mostrarDetalle(nuevoLogro.id);
-      });
+
+    } catch (error) {
+        console.error("Error al cargar los logros:", error);
     }
+    
 
-    // Limpiar campos
-    inputNuevoNombre.value = "";
-    inputNuevaFecha.value = "";
-    inputNuevaNota.value = "";
-    inputNuevoDesbloqueado.checked = false;
-    inputNuevoImagen.value = "";
-  });
+    // Función reutilizable para agregar o editar un logro
+    const validarYGuardarLogro = async (esNuevo = true) => {
+        const nombre = esNuevo ? inputNuevoNombre.value.trim() : document.getElementById("edit-nombre").value.trim();
+        const fecha = esNuevo ? inputNuevaFecha.value.trim() : document.getElementById("edit-fecha").value.trim();
+        const notas = esNuevo ? inputNuevaNota.value.trim() : document.getElementById("edit-notas").value.trim();
+        const desbloqueado = esNuevo ? inputNuevoDesbloqueado.checked : document.getElementById("edit-desbloqueado").checked;
+        const inputImagen = esNuevo ? inputNuevoImagen : document.getElementById("edit-imagen");
+        const archivo = inputImagen.files[0];
 
-  // Editar logro
-  btnEditarLogro.addEventListener("click", () => {
-    editarLogro();
-  });
+        if (!nombre) { alert("El nombre del logro es obligatorio."); return; }
+        if (nombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
+        if (notas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
+        if (fecha && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) { alert("Formato de fecha inválido."); return; }
 
-  // Guardar cambios de un logro
-  btnGuardar.addEventListener("click", () => {
-    if (!logroActual) return;
+        let logro;
+        if (esNuevo) {
+            let nuevoId = logros.length > 0 ? Math.max(...logros.map(l => l.id)) + 1 : 1;
+            logro = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
+        } else {
+            logro = logroActual;
+            logro.nombre = nombre;
+            logro.fecha = fecha || "--/--/----";
+            logro.notas = notas || "Sin notas";
+            logro.desbloqueado = desbloqueado;
+        }
 
-    const nuevoNombre = document.getElementById("edit-nombre").value.trim();
-    const nuevaFecha = document.getElementById("edit-fecha").value.trim();
-    const nuevasNotas = document.getElementById("edit-notas").value.trim();
-    const desbloqueado = document.getElementById("edit-desbloqueado").checked;
+        if (archivo) {
+            try {
+                const base64 = await convertirImagenABase64(archivo);
+                logro.imagen = base64;
+            } catch (error) {
+                console.error("Error al convertir imagen a Base64:", error);
+                alert("Ocurrió un error con la imagen.");
+                return;
+            }
+        }
+        
+        try {
+            await guardarLogroEnFirebase(database, logro);
+            if (esNuevo) {
+                logros.push(logro);
+                // Limpiar campos del formulario solo al agregar un nuevo logro
+                inputNuevoNombre.value = "";
+                inputNuevaFecha.value = "";
+                inputNuevaNota.value = "";
+                inputNuevoDesbloqueado.checked = false;
+                inputNuevoImagen.value = "";
+            }
+            renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+            mostrarDetalle(logro.id);
+        } catch (error) {
+            console.error("Error al guardar el logro:", error);
+            alert("Ocurrió un error al guardar el logro.");
+        }
+    };
 
-    if (!nuevoNombre) { alert("El nombre del logro es obligatorio."); return; }
-    if (nuevoNombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
-    if (nuevasNotas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
-    if (nuevaFecha && !/^\d{4}-\d{2}-\d{2}$/.test(nuevaFecha)) { alert("Formato de fecha inválido."); return; }
+    // Agregar un nuevo logro
+    btnAgregarLogro.addEventListener("click", () => validarYGuardarLogro(true));
 
-    logroActual.nombre = nuevoNombre;
-    logroActual.fecha = nuevaFecha || "--/--/----";
-    logroActual.notas = nuevasNotas || "Sin notas";
-    logroActual.desbloqueado = desbloqueado;
+    // Editar logro
+    btnEditarLogro.addEventListener("click", () => {
+        editarLogro();
+    });
 
-    const inputEditImagen = document.getElementById("edit-imagen");
-    const archivo = inputEditImagen.files[0];
-
-    if (archivo) {
-      convertirImagenABase64(archivo, (base64) => {
-        logroActual.imagen = base64;
-        guardarLogroEnFirebase(database, logroActual, () => {
-          const index = logros.findIndex(l => l.id === logroActual.id);
-          if (index !== -1) logros[index] = logroActual;
-          renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-          mostrarDetalle(logroActual.id);
-        });
-      });
-    } else {
-      guardarLogroEnFirebase(database, logroActual, () => {
-        const index = logros.findIndex(l => l.id === logroActual.id);
-        if (index !== -1) logros[index] = logroActual;
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-        mostrarDetalle(logroActual.id);
-      });
-    }
-  });
-
+    // Guardar cambios de un logro
+    btnGuardar.addEventListener("click", () => validarYGuardarLogro(false));
 });

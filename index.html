@@ -12,15 +12,15 @@
         <div class="header-jugadores">
             <h1>LogrosAF</h1>
         </div>
-        <div class="header-acciones">
-            <button id="btn-cambiar-tema" class="btn-circular">🌙</button>
-        </div>
     </header>
 
     <main>
         <section id="pantalla-inicial" class="pantalla">
             <div class="card">
-                <h2>Iniciar Sesión</h2>
+                <div class="controles-card">
+                    <h2 class="titulo-centrado">Comenzar partida</h2>
+                    <button id="btn-cambiar-tema" class="btn-circular" title="Cambiar tema">🌙</button>
+                </div>
                 <div class="form-group">
                     <label for="jugador1">Jugador 1:</label>
                     <input type="text" id="jugador1" class="form-input" value="Atenea">
@@ -36,9 +36,12 @@
         <section id="menu-logros" class="pantalla" style="display: none;">
             <div class="controles-menu">
                 <button id="btn-volver-inicio" class="btn-secundario">← Volver</button>
-                <button id="btn-agregar-logro" class="btn-secundario">
-                    <span>+</span>
-                </button>
+                <div class="grupo-derecha">
+                    <button id="btn-agregar-logro" class="btn-secundario" title="Agregar logro">
+                        <span>+</span>
+                    </button>
+                    <button id="btn-cambiar-tema-menu" class="btn-circular" title="Cambiar tema">🌙</button>
+                </div>
             </div>
             <div class="lista-logros">
                 <h3>Logros Desbloqueados</h3>
@@ -52,7 +55,10 @@
             <div class="card">
                 <div class="controles-menu">
                     <button id="btn-volver-menu" class="btn-secundario">← Volver</button>
-                    <button id="btn-editar-logro" class="btn-secundario">Editar</button>
+                    <div class="grupo-derecha">
+                        <button id="btn-editar-logro" class="btn-secundario">Editar</button>
+                        <button id="btn-cambiar-tema-detalle" class="btn-circular" title="Cambiar tema">🌙</button>
+                    </div>
                 </div>
                 <h2 id="detalle-titulo"></h2>
                 <div class="info-logro">
@@ -70,6 +76,9 @@
             <div class="card">
                 <div class="controles-menu">
                     <button id="btn-volver-nuevo" class="btn-secundario">← Volver</button>
+                    <div class="grupo-derecha">
+                        <button id="btn-cambiar-tema-nuevo" class="btn-circular" title="Cambiar tema">🌙</button>
+                    </div>
                 </div>
                 <h2>Nuevo Logro</h2>
 

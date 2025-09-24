@@ -1,3 +1,4 @@
+
 /* Opción 1: Tema Claro (Minimalista) */
 :root {
     --color-fondo: #f9f9f9; 
@@ -115,6 +116,40 @@ body.op2 button:hover {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+}
+
+/* Grupo de controles a la derecha del menú ("+" y tema) */
+.grupo-derecha {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Controles superiores dentro de la card de inicio */
+.controles-card {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* centrado real del título con botón a la derecha */
+    align-items: center;
+}
+.controles-card .titulo-centrado {
+    grid-column: 2;
+    justify-self: center;
+}
+.controles-card .btn-circular {
+    grid-column: 3;
+    justify-self: end;
+}
+
+/* Botón circular pequeño para el tema en la pantalla inicial */
+.btn-circular {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Campos de Formulario */

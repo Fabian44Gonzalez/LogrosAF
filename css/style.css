@@ -1,34 +1,35 @@
-/* Estilos generales */
+/* ===============================
+    OPCIÓN 1: TEMA CLARO (ROSA PASTEL + BLANCO SUAVE)
+    =============================== */
 :root {
-    --color-fondo: #f0f2f5;
+    --color-fondo: #f5f5f5; /* Blanco muy suave */
     --color-card: #ffffff;
     --color-texto: #333;
     --color-borde: #ddd;
-    --color-principal: #007bff;
-    --color-secundario: #6c757d;
+    --color-principal: #ff99b3; /* Rosa pastel */
+    --color-secundario: #ffb6c1; /* Rosa más claro */
+    --color-destacado: #f5d6e0; /* Rosa más pálido */
 }
 
-body.op1 {
-    --color-fondo: #212529;
-    --color-card: #343a40;
-    --color-texto: #f8f9fa;
-    --color-borde: #495057;
-    --color-principal: #17a2b8;
-    --color-secundario: #f8f9fa;
-}
-
+/* ===============================
+    OPCIÓN 2: TEMA OSCURO (TONOS CÁLIDOS)
+    =============================== */
 body.op2 {
-    --color-fondo: #17181c;
-    --color-card: #282a36;
-    --color-texto: #f8f9fa;
-    --color-borde: #44475a;
-    --color-principal: #50fa7b;
-    --color-secundario: #6272a4;
+    --color-fondo: #2a1a2b;
+    --color-card: #3d2b3c;
+    --color-texto: #f5d6e0;
+    --color-borde: #7a4b6e;
+    --color-principal: #ffb6c1;
+    --color-secundario: #f5d6e0;
+    --color-destacado: #502d49;
 }
 
+/* ===============================
+    ESTILOS GENERALES
+    =============================== */
 body {
-    font-family: Arial, sans-serif;
-    background-color: var(--color-fondo);
+    font-family: "Trebuchet MS", sans-serif;
+    background: var(--color-fondo);
     color: var(--color-texto);
     margin: 0;
     padding: 0;
@@ -38,464 +39,173 @@ body {
     min-height: 100vh;
 }
 
-/* Encabezado */
-header {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-h1 {
-    margin: 0;
-    font-size: 2em;
-    font-weight: bold;
-}
-
-.header-jugadores {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.header-acciones {
-    display: flex;
-    gap: 10px;
-}
-
-/* Pantallas y tarjetas */
-main {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.pantalla {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.card {
-    background-color: var(--color-card);
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--color-borde);
-    text-align: center;
-}
-
-/* Formularios */
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    box-sizing: border-box;
-    border: 1px solid var(--color-borde);
-    border-radius: 8px;
-    background-color: var(--color-fondo);
-    color: var(--color-texto);
-}
-
-textarea.form-input {
-    resize: vertical;
-    min-height: 100px;
-}
-
-/* Botones */
-.btn-principal, .btn-secundario {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn-principal {
-    background-color: var(--color-principal);
-    color: var(--color-card);
-    font-weight: bold;
-    width: 100%;
-    margin-top: 20px;
-}
-
-.btn-principal:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
-
-.btn-secundario {
-    background-color: var(--color-secundario);
-    color: var(--color-card);
-}
-
-.btn-secundario:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
-
-.btn-circular {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-size: 20px;
-    background-color: var(--color-secundario);
-    color: var(--color-card);
-    border: none;
-    cursor: pointer;
-}
-
-.controles-menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-/* Lista de logros */
-.lista-logros {
-    text-align: left;
-}
-
-h3 {
-    margin-top: 20px;
+h1, h2, h3 {
     color: var(--color-principal);
 }
 
-.lista-desbloqueados, .lista-bloqueados {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+section {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: var(--color-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.lista-desbloqueados li, .lista-bloqueados li {
-    background-color: var(--color-card);
-    border: 1px solid var(--color-borde);
-    border-radius: 8px;
-    margin-bottom: 10px;
-    transition: transform 0.2s;
-}
-
-.lista-desbloqueados li:hover, .lista-bloqueados li:hover {
-    transform: translateY(-2px);
-}
-
-.lista-desbloqueados li button, .lista-bloqueados li button {
-    width: 100%;
-    text-align: left;
-    background: none;
-    color: var(--color-texto);
-    padding: 15px;
+button {
+    background: var(--color-principal);
+    color: white;
     border: none;
-    cursor: pointer;
-    font-size: 1em;
-}
-
-/* Detalle del logro */
-.info-logro {
-    text-align: center;
-}
-
-.contenedor-imagen {
-    width: 100%;
-    max-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f9fa;
-    border: 1px dashed var(--color-borde);
+    padding: 10px 20px;
+    margin: 8px;
     border-radius: 8px;
-    margin: 20px auto;
-    overflow: hidden;
-    color: #999;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
 }
 
-.contenedor-imagen img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+button:hover {
+    background: var(--color-secundario);
 }
 
-.info-logro p {
-    text-align: left;
-    margin: 10px 0;
-}/* ===============================
-   OPCIÓN 1: ROSA PASTEL + BLANCO SUAVE
-   =============================== */
-body.op1 {
-  font-family: "Trebuchet MS", sans-serif;
-  background: #ffe6f0;
-  color: #333;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-}
-
-body.op1 h1, body.op1 h2, body.op1 h3 {
-  color: #ff99b3;
-}
-
-body.op1 section {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #fef6f9;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-body.op1 button {
-  background: #ffb6c1;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s;
-}
-
-body.op1 button:hover {
-  background: #ff99b3;
-}
-
-/* ===============================
-   OPCIÓN 2: MODO OSCURO ROSA PASTEL
-   =============================== */
-body.op2 {
-  font-family: "Trebuchet MS", sans-serif;
-  background: #2a1a2b;
-  color: #f5d6e0;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-}
-
-body.op2 h1, body.op2 h2, body.op2 h3 {
-  color: #ffb6c1;
-}
-
-body.op2 section {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #3d2b3c;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-
-body.op2 button {
-  background: #ffb6c1;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s;
-}
-
-body.op2 button:hover {
-  background: #ff99b3;
-}
-
-body.op2 .form-input,
-body.op2 #detalle-notas,
-body.op2 .imagen-logro {
-  background: #502d49;
-  color: #f5d6e0;
-  border-color: #7a4b6e;
-}
-
-body.op2 .form-input::placeholder {
-  color: #ccc;
-}
-
-/* ===============================
-   BOTÓN DE TEMA
-   =============================== */
-.btn-tema {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  line-height: 40px;
-  padding: 0;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background 0.3s;
-}
-
-body.op1 .btn-tema { background: #ffb6c1; color: white; }
-body.op1 .btn-tema:hover { background: #ff99b3; }
-
-body.op2 .btn-tema { background: #ffb6c1; color: white; }
-body.op2 .btn-tema:hover { background: #ff99b3; }
-
-/* ===============================
-   ESTILOS GENERALES
-   =============================== */
 ul { list-style: none; padding: 0; }
 li { margin: 8px 0; }
 
-.imagen-logro {
-  width: 200px;
-  aspect-ratio: 4 / 3;
-  margin: 10px auto;
-  border: 2px dashed #ccc;
-  border-radius: 8px;
-  background: #fafafa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  color: #888;
-}
-
-.stars { font-size: 20px; color: #ccc; }
-.stars .active { color: gold; }
-
-#detalle-notas {
-  margin: 10px auto;
-  text-align: center;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: #fefefe;
-  min-height: 50px;
-}
-
-/* ===============================
-   FORM INPUTS CONSISTENTES
-   =============================== */
 .form-input {
-  padding: 6px 8px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  width: 100%;
-  max-width: 300px;
-  text-align: center;
-  margin: 4px 0;
-  box-sizing: border-box;
+    background: var(--color-card);
+    color: var(--color-texto);
+    border: 1px solid var(--color-borde);
+    padding: 6px 8px;
+    font-size: 16px;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    margin: 4px 0;
+    box-sizing: border-box;
 }
 
 textarea.form-input {
-  width: 90%;
-  height: 60px;
-  resize: none;
-}
-
-/* ===============================
-   CENTRAR FORMULARIO DE NUEVO LOGRO
-   =============================== */
-#nuevo-logro-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Centramos inputs y textarea */
-#nuevo-logro-form input,
-#nuevo-logro-form textarea {
-  max-width: 300px;
-  width: 90%;
-}
-
-/* Checkbox e input de imagen alineados con texto a la izquierda */
-#nuevo-logro-form label {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 5px;
-  width: 300px;
-  margin: 4px 0;
-}
-
-/* ===============================
-   INPUTS JUGADORES MÁS PEQUEÑOS
-   =============================== */
-#pantalla-inicial input.form-input {
-  max-width: 200px;
-  width: 100%;
-  text-align: center;
-}
-
-/* ===============================
-   BOTONES MENU LOGROS
-   =============================== */
-#botones-menu {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-#botones-menu button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 8px;
-  background: #ffb6c1;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-#botones-menu button:hover {
-  background: #ff99b3;
-}
-
-/* ===============================
-   MOBILE FRIENDLY
-   =============================== */
-@media (max-width: 600px) {
-  body.op1 section,
-  body.op2 section {
-    margin: 20px 10px;
-    padding: 15px;
-  }
-
-  .form-input {
-    max-width: 90%;
-  }
-
-  .imagen-logro {
     width: 90%;
-    height: auto;
-    min-height: 100px;
+    height: 60px;
+    resize: none;
+}
+
+.imagen-logro {
+    width: 200px;
+    aspect-ratio: 4 / 3;
     margin: 10px auto;
-  }
+    border: 2px dashed var(--color-borde);
+    border-radius: 8px;
+    background: var(--color-destacado);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: var(--color-texto);
+}
 
-  #nuevo-logro-form label,
-  #editar-logro-from {
-    width: 90%;
-  }
+.stars { 
+    font-size: 20px; 
+    color: #ccc; 
+}
+.stars .active { 
+    color: gold; 
+}
 
-  #botones-menu {
+#detalle-notas {
+    margin: 10px auto;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    background: var(--color-card);
+    min-height: 50px;
+}
+
+#nuevo-logro-form {
+    display: flex;
     flex-direction: column;
     align-items: center;
-  }
+    gap: 10px;
+}
+
+#nuevo-logro-form input,
+#nuevo-logro-form textarea {
+    max-width: 300px;
+    width: 90%;
+}
+
+#nuevo-logro-form label {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+    width: 300px;
+    margin: 4px 0;
+}
+
+#pantalla-inicial input.form-input {
+    max-width: 200px;
+    width: 100%;
+    text-align: center;
+}
+
+#botones-menu {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-tema {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    line-height: 40px;
+    padding: 0;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s;
+    background: var(--color-principal);
+    color: white;
+}
+
+.btn-tema:hover {
+    background: var(--color-secundario);
+}
+
+/* ===============================
+    MOBILE FRIENDLY
+    =============================== */
+@media (max-width: 600px) {
+    section {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+    .form-input {
+        max-width: 90%;
+    }
+    .imagen-logro {
+        width: 90%;
+        height: auto;
+        min-height: 100px;
+        margin: 10px auto;
+    }
+    #nuevo-logro-form label,
+    #editar-logro-form {
+        width: 90%;
+    }
+    #botones-menu {
+        flex-direction: column;
+        align-items: center;
+    }
 }

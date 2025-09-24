@@ -69,49 +69,48 @@ document.addEventListener("DOMContentLoaded", async () => {
         const notas = inputNuevaNota.value.trim();
         const desbloqueado = inputNuevoDesbloqueado.checked;
 
-        if (!nombre) {
-            alert("El nombre del logro es obligatorio.");
-            return;
-        }
+        if (!nombre) { alert("El nombre del logro es obligatorio."); return; }
+        if (nombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
+        if (notas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
 
-        if (nombre.length > 50) {
-            alert("El nombre no puede superar 50 caracteres.");
-            return;
-        }
+        // Estado de carga en botón
+        const prevText = btnGuardarNuevo.textContent;
+        btnGuardarNuevo.textContent = "Guardando...";
+        btnGuardarNuevo.disabled = true;
+        btnGuardarNuevo.setAttribute("aria-busy", "true");
 
-        if (notas.length > 200) {
-            alert("Las notas no pueden superar 200 caracteres.");
-            return;
-        }
+        try {
+            // Calcular el siguiente ID disponible de forma segura
+            const maxId = logros.length > 0 ? Math.max(...logros.map(l => Number(l.id) || 0)) : 0;
+            const nuevoId = maxId + 1;
 
-        // Calcular el siguiente ID disponible de forma segura
-        const maxId = logros.length > 0 ? Math.max(...logros.map(l => Number(l.id) || 0)) : 0;
-        const nuevoId = maxId + 1;
+            let nuevoLogroObj = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
 
-        let nuevoLogroObj = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
-        
-        const archivo = inputNuevoImagen.files[0];
-        if (archivo) {
-            try {
+            const archivo = inputNuevoImagen.files[0];
+            if (archivo) {
                 const base64 = await convertirImagenABase64(archivo);
                 nuevoLogroObj.imagen = base64;
-            } catch (error) {
-                alert("Ocurrió un error al convertir la imagen.");
-                return;
             }
+
+            // Guardar en la base de datos
+            await database.ref("logros/" + nuevoId).set(nuevoLogroObj);
+
+            // Agregar al array local
+            logros.push(nuevoLogroObj);
+
+            // Volver al menú y mostrar el detalle del nuevo logro
+            renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+            nuevoLogro.style.display = "none";
+            mostrarDetalle(nuevoId);
+            limpiarCampos();
+        } catch (error) {
+            console.error("Error al guardar el nuevo logro:", error);
+            alert("Ocurrió un error al guardar el logro. Inténtalo de nuevo.");
+        } finally {
+            btnGuardarNuevo.textContent = prevText;
+            btnGuardarNuevo.disabled = false;
+            btnGuardarNuevo.removeAttribute("aria-busy");
         }
-
-        // Guardar en la base de datos
-        await database.ref("logros/" + nuevoId).set(nuevoLogroObj);
-        
-        // Agregar al array local
-        logros.push(nuevoLogroObj);
-
-        // Volver al menú y mostrar el detalle del nuevo logro
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-        nuevoLogro.style.display = "none";
-        mostrarDetalle(nuevoId);
-        limpiarCampos();
     });
 
     // Volver desde la pantalla de nuevo logro al menú
@@ -127,52 +126,51 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     btnGuardar.addEventListener("click", async () => {
         if (!logroActual) return;
-        
+
         const nuevoNombre = document.getElementById("edit-nombre").value.trim();
         const nuevaFecha = document.getElementById("edit-fecha").value.trim();
         const nuevasNotas = document.getElementById("edit-notas").value.trim();
         const desbloqueado = document.getElementById("edit-desbloqueado").checked;
 
-        if (!nuevoNombre) {
-            alert("El nombre del logro es obligatorio.");
-            return;
-        }
+        if (!nuevoNombre) { alert("El nombre del logro es obligatorio."); return; }
+        if (nuevoNombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
+        if (nuevasNotas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
 
-        if (nuevoNombre.length > 50) {
-            alert("El nombre no puede superar 50 caracteres.");
-            return;
-        }
+        // Estado de carga en botón Guardar
+        const prevText = btnGuardar.textContent;
+        btnGuardar.textContent = "Guardando...";
+        btnGuardar.disabled = true;
+        btnGuardar.setAttribute("aria-busy", "true");
 
-        if (nuevasNotas.length > 200) {
-            alert("Las notas no pueden superar 200 caracteres.");
-            return;
-        }
+        try {
+            // Actualizar el objeto local
+            logroActual.nombre = nuevoNombre;
+            logroActual.fecha = nuevaFecha || "--/--/----";
+            logroActual.notas = nuevasNotas || "Sin notas";
+            logroActual.desbloqueado = desbloqueado;
 
-        // Actualizar el objeto local
-        logroActual.nombre = nuevoNombre;
-        logroActual.fecha = nuevaFecha || "--/--/----";
-        logroActual.notas = nuevasNotas || "Sin notas";
-        logroActual.desbloqueado = desbloqueado;
-        
-        const inputEditImagen = document.getElementById("edit-imagen");
-        const archivo = inputEditImagen.files[0];
+            const inputEditImagen = document.getElementById("edit-imagen");
+            const archivo = inputEditImagen.files[0];
 
-        if (archivo) {
-            try {
+            if (archivo) {
                 const base64 = await convertirImagenABase64(archivo);
                 logroActual.imagen = base64;
-            } catch (error) {
-                alert("Ocurrió un error con la imagen.");
-                return;
             }
+
+            // Guardar los cambios en la base de datos
+            await database.ref("logros/" + logroActual.id).set(logroActual);
+
+            // Volver a renderizar para reflejar los cambios
+            renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+            volverAMostrarDetalle(logroActual.id);
+        } catch (error) {
+            console.error("Error al guardar los cambios:", error);
+            alert("Ocurrió un error al guardar los cambios. Inténtalo de nuevo.");
+        } finally {
+            btnGuardar.textContent = prevText;
+            btnGuardar.disabled = false;
+            btnGuardar.removeAttribute("aria-busy");
         }
-
-        // Guardar los cambios en la base de datos
-        await database.ref("logros/" + logroActual.id).set(logroActual);
-
-        // Volver a renderizar para reflejar los cambios
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-        volverAMostrarDetalle(logroActual.id);
     });
 
     const limpiarCampos = () => {

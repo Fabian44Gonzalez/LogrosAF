@@ -211,7 +211,8 @@ body.op2 li:hover {
     background: rgba(255, 182, 193, 0.1);
 }
 
-.imagen-logro {
+/* Marco uniforme de imagen (detalle y posibles usos futuros) */
+.contenedor-imagen, .imagen-logro {
     width: 220px;
     aspect-ratio: 4 / 3;
     margin: 15px auto;
@@ -223,9 +224,17 @@ body.op2 li:hover {
     align-items: center;
     font-size: 14px;
     color: var(--color-texto);
+    overflow: hidden; /* Evita desbordes de imagen */
 }
 
-body.op2 .imagen-logro {
+.contenedor-imagen img, .imagen-logro img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ajusta dentro del marco sin recortar */
+    border-radius: 10px;
+}
+
+body.op2 .contenedor-imagen, body.op2 .imagen-logro {
     background: var(--color-destacado);
 }
 

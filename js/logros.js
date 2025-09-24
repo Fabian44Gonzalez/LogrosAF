@@ -47,8 +47,7 @@ export function mostrarDetalle(id) {
         const img = document.createElement("img");
         img.src = logro.imagen;
         img.alt = `Imagen del logro "${logro.nombre}"`;
-        img.style.maxWidth = "100%";
-        img.style.borderRadius = "8px";
+        // El tamaño lo controla el contenedor por CSS (object-fit: contain)
         contenedorImagen.appendChild(img);
     } else {
         contenedorImagen.textContent = "(espacio para foto)";

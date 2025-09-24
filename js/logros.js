@@ -1,9 +1,16 @@
 // js/logros.js
+
 export const logros = [];
 export let logroActual = null;
 
-export function setLogroActual(logro) {
-    logroActual = logro;
+// Convertir imagen a Base64
+export function convertirImagenABase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
 }
 
 // Renderizar logros en el menú
@@ -17,7 +24,7 @@ export function renderizarLogros(logrosDesbloqueados, logrosBloqueados) {
         btn.textContent = logro.desbloqueado
             ? `${logro.nombre} ✅`
             : `${logro.nombre} 🔒`;
-        btn.addEventListener("click", () => mostrarDetalle(logro.firebaseId));
+        btn.addEventListener("click", () => mostrarDetalle(logro.id));
         li.appendChild(btn);
         if (logro.desbloqueado) logrosDesbloqueados.appendChild(li);
         else logrosBloqueados.appendChild(li);
@@ -25,10 +32,10 @@ export function renderizarLogros(logrosDesbloqueados, logrosBloqueados) {
 }
 
 // Mostrar detalle del logro
-export function mostrarDetalle(firebaseId) {
-    const logro = logros.find(l => l.firebaseId === firebaseId);
+export function mostrarDetalle(id) {
+    const logro = logros.find(l => String(l.id) === String(id));
     if (!logro) return;
-    setLogroActual(logro);
+    logroActual = logro;
 
     document.getElementById("menu-logros").style.display = "none";
     document.getElementById("detalle-logro").style.display = "block";
@@ -52,14 +59,34 @@ export function mostrarDetalle(firebaseId) {
     document.getElementById("detalle-notas").textContent = logro.notas;
 
     document.getElementById("btn-editar-logro").style.display = "inline-block";
-    document.getElementById("btn-guardar-lo_ro").style.display = "none";
+    document.getElementById("btn-guardar-logro").style.display = "none";
 }
 
-// Volver a mostrar detalle después de guardar
-export function volverAMostrarDetalle(firebaseId) {
-    const logro = logros.find(l => l.firebaseId === firebaseId);
+// Editar un logro existente
+export function editarLogro(logro) {
     if (!logro) return;
-    setLogroActual(logro);
+
+    const titulo = document.getElementById("detalle-titulo");
+    const fecha = document.getElementById("detalle-fecha");
+    const notas = document.getElementById("detalle-notas");
+
+    // Reemplaza el contenido de los elementos con inputs
+    titulo.innerHTML = `Logro: <input type="text" id="edit-nombre" class="form-input" value="${logro.nombre}" maxlength="50">`;
+    fecha.innerHTML = `Fecha: <input type="date" id="edit-fecha" class="form-input" value="${logro.fecha}">`;
+    notas.innerHTML = `
+        <textarea id="edit-notas" class="form-input" maxlength="200">${logro.notas}</textarea>
+        <label>Desbloqueado: <input type="checkbox" id="edit-desbloqueado" ${logro.desbloqueado ? "checked" : ""}></label>
+    `;
+
+    document.getElementById("label-cambiar-imagen").style.display = "block";
+    document.getElementById("btn-editar-logro").style.display = "none";
+    document.getElementById("btn-guardar-logro").style.display = "inline-block";
+}
+
+export function volverAMostrarDetalle(id) {
+    const logro = logros.find(l => String(l.id) === String(id));
+    if (!logro) return;
+    logroActual = logro;
 
     document.getElementById("detalle-titulo").textContent = `Logro: ${logro.nombre}`;
     document.getElementById("detalle-fecha").textContent = logro.fecha;
@@ -74,36 +101,9 @@ export function volverAMostrarDetalle(firebaseId) {
 
     document.getElementById("label-cambiar-imagen").style.display = "none";
     document.getElementById("btn-editar-logro").style.display = "inline-block";
-    document.getElementById("btn-guardar-lo_ro").style.display = "none";
+    document.getElementById("btn-guardar-logro").style.display = "none";
 }
 
-// Convertir imagen a Base64
-export function convertirImagenABase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-    });
-}
-
-// Editar un logro existente (dinámicamente)
-export function editarLogro(logro) {
-    if (!logro) return;
-
-    const titulo = document.getElementById("detalle-titulo");
-    const fecha = document.getElementById("detalle-fecha");
-    const notas = document.getElementById("detalle-notas");
-
-    // Reemplaza el contenido de los elementos con inputs
-    titulo.innerHTML = `Logro: <input type="text" id="edit-nombre" class="form-input" value="${logro.nombre}" maxlength="50">`;
-    fecha.innerHTML = `Fecha: <input type="date" id="edit-fecha" class="form-input" value="${logro.fecha !== '--/--/----' ? logro.fecha : ''}">`;
-    notas.innerHTML = `
-        <textarea id="edit-notas" class="form-input" maxlength="200">${logro.notas}</textarea>
-        <label>Desbloqueado: <input type="checkbox" id="edit-desbloqueado" ${logro.desbloqueado ? "checked" : ""}></label>
-    `;
-
-    document.getElementById("label-cambiar-imagen").style.display = "block";
-    document.getElementById("btn-editar-lo_ro").style.display = "none";
-    document.getElementById("btn-guardar-lo_ro").style.display = "inline-block";
+export function setLogroActual(logro) {
+    logroActual = logro;
 }

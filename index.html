@@ -1,68 +1,73 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuestra Partida - Libro de Logros</title>
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- Firebase compat -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogrosAF</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
-<body class="op1">
+<body>
+    <header>
+        <div class="header-jugadores">
+            <h1>LogrosAF</h1>
+        </div>
+        <div class="header-acciones">
+            <button id="btn-cambiar-tema" class="btn-circular">🌙</button>
+        </div>
+    </header>
 
-  <button id="btn-cambiar-tema" class="btn-tema">♡</button>
+    <main>
+        <section id="pantalla-inicial" class="pantalla">
+            <div class="card">
+                <h2>Iniciar Sesión</h2>
+                <div class="form-group">
+                    <label for="jugador1">Jugador 1:</label>
+                    <input type="text" id="jugador1" class="form-input" value="Atenea">
+                </div>
+                <div class="form-group">
+                    <label for="jugador2">Jugador 2:</label>
+                    <input type="text" id="jugador2" class="form-input" value="Fabian">
+                </div>
+                <button id="btn-iniciar" class="btn-principal">Iniciar</button>
+            </div>
+        </section>
 
-  <section id="pantalla-inicial">
-    <h1>NUESTRA PARTIDA</h1>
-    <p>Jugador 1: <input type="text" id="jugador1" class="form-input" placeholder=""></p>
-    <p>Jugador 2: <input type="text" id="jugador2" class="form-input" placeholder=""></p>
-    <button id="btn-iniciar">Iniciar partida</button>
-  </section>
+        <section id="menu-logros" class="pantalla" style="display: none;">
+            <div class="controles-menu">
+                <button id="btn-volver-inicio" class="btn-secundario">← Volver</button>
+                <button id="btn-agregar-logro" class="btn-secundario">
+                    <span>+</span>
+                </button>
+            </div>
+            <div class="lista-logros">
+                <h3>Logros Desbloqueados</h3>
+                <ul id="logros-desbloqueados" class="lista-desbloqueados"></ul>
+                <h3>Logros Bloqueados</h3>
+                <ul id="logros-bloqueados" class="lista-bloqueados"></ul>
+            </div>
+        </section>
 
-  <section id="menu-logros" style="display:none;">
-    <h2>Logros</h2>
-    <h3>Desbloqueados</h3>
-    <ul id="logros-desbloqueados"></ul>
-    <h3>Por desbloquear</h3>
-    <ul id="logros-bloqueados"></ul>
+        <section id="detalle-logro" class="pantalla" style="display: none;">
+            <div class="card">
+                <div class="controles-menu">
+                    <button id="btn-volver-menu" class="btn-secundario">← Volver</button>
+                    <button id="btn-editar-logro" class="btn-secundario">Editar</button>
+                </div>
+                <h2 id="detalle-titulo"></h2>
+                <div class="info-logro">
+                    <div id="detalle-imagen" class="contenedor-imagen"></div>
+                    <label id="label-cambiar-imagen" style="display: none;">Cambiar imagen: <input type="file" id="edit-imagen" accept="image/*"></label>
+                    <p>Fecha: <span id="detalle-fecha"></span></p>
+                    <p>Notas: <span id="detalle-notas"></span></p>
+                    <button id="btn-guardar-logro" class="btn-principal" style="display: none;">Guardar</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <h3>Agregar nuevo logro</h3>
-    <div id="nuevo-logro-form">
-        <input type="text" id="nuevo-nombre" class="form-input" placeholder="Nombre del logro">
-        <input type="date" id="nueva-fecha" class="form-input" placeholder="Fecha (dd/mm/aaaa)">
-        <textarea id="nueva-nota" class="form-input" placeholder="Notas"></textarea>
-        <label>Desbloqueado: <input type="checkbox" id="nuevo-desbloqueado"></label>
-        <label>Imagen: <input type="file" id="nuevo-imagen" accept="image/*"></label>
-    </div>
-
-    <div id="botones-menu">
-        <button id="btn-volver-inicio">Volver</button>
-        <button id="btn-agregar-logro">Añadir logro</button>
-    </div>
-  </section>
-
-  <section id="detalle-logro" style="display:none;">
-    <h2 id="detalle-titulo">Logro #X: [Nombre]</h2>
-    <div>
-      <p><strong>Imagen:</strong></p>
-      <div id="detalle-imagen" class="imagen-logro">(espacio para foto)</div>
-      <label id="label-cambiar-imagen" style="display:none;">Cambiar imagen: 
-        <input type="file" id="edit-imagen" accept="image/*">
-      </label>
-    </div>
-    <p><strong>Fecha:</strong> <span id="detalle-fecha">--/--/----</span></p>
-    <p><strong>Dificultad:</strong> <span class="stars">☆ ☆ ☆ ☆ ☆</span></p>
-    <p><strong>Notas:</strong></p>
-    <div id="detalle-notas">(aquí irán comentarios)</div>
-
-    <button id="btn-volver-menu">Volver al menú</button>
-    <button id="btn-editar-logro">Editar logro</button>
-    <button id="btn-guardar-logro" style="display:none;">Guardar cambios</button>
-  </section>
-
-  <!-- Main JS modular -->
-  <script type="module" src="js/main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

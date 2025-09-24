@@ -64,6 +64,43 @@
                 </div>
             </div>
         </section>
+
+        <!-- Nueva pantalla: Crear nuevo logro -->
+        <section id="nuevo-logro" class="pantalla" style="display: none;">
+            <div class="card">
+                <div class="controles-menu">
+                    <button id="btn-volver-nuevo" class="btn-secundario">← Volver</button>
+                </div>
+                <h2>Nuevo Logro</h2>
+
+                <div class="form-group">
+                    <label for="nuevo-nombre">Nombre:</label>
+                    <input type="text" id="nuevo-nombre" class="form-input" maxlength="50" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nueva-fecha">Fecha:</label>
+                    <input type="date" id="nueva-fecha" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="nuevo-desbloqueado">Desbloqueado:</label>
+                    <input type="checkbox" id="nuevo-desbloqueado">
+                </div>
+
+                <div class="form-group">
+                    <label for="nuevo-imagen">Imagen:</label>
+                    <input type="file" id="nuevo-imagen" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="nueva-nota">Notas:</label>
+                    <textarea id="nueva-nota" class="form-input" maxlength="200"></textarea>
+                </div>
+
+                <button id="btn-guardar-nuevo" class="btn-principal">Guardar</button>
+            </div>
+        </section>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>

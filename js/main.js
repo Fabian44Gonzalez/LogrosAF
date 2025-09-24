@@ -25,6 +25,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const btnVolverMenuDetalle = document.getElementById("btn-volver-menu");
     const btnVolverInicio = document.getElementById("btn-volver-inicio");
 
+    // Nueva pantalla de creación de logro
+    const nuevoLogro = document.getElementById("nuevo-logro");
+    const btnVolverNuevo = document.getElementById("btn-volver-nuevo");
+    const btnGuardarNuevo = document.getElementById("btn-guardar-nuevo");
+
     const inputNuevoNombre = document.getElementById("nuevo-nombre");
     const inputNuevaFecha = document.getElementById("nueva-fecha");
     const inputNuevaNota = document.getElementById("nueva-nota");
@@ -51,7 +56,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         pantallaInicial.style.display = "block";
     });
 
-    btnAgregarLogro.addEventListener("click", async () => {
+    // Abrir pantalla para crear un nuevo logro
+    btnAgregarLogro.addEventListener("click", () => {
+        menuLogros.style.display = "none";
+        nuevoLogro.style.display = "block";
+    });
+
+    // Guardar nuevo logro
+    btnGuardarNuevo.addEventListener("click", async () => {
         const nombre = inputNuevoNombre.value.trim();
         const fecha = inputNuevaFecha.value.trim();
         const notas = inputNuevaNota.value.trim();
@@ -72,17 +84,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // Obtener el ID del último logro y generar el siguiente
-        const ultimoLogro = logros.length > 0 ? logros[logros.length - 1] : { id: 0 };
-        const nuevoId = ultimoLogro.id + 1;
+        // Calcular el siguiente ID disponible de forma segura
+        const maxId = logros.length > 0 ? Math.max(...logros.map(l => Number(l.id) || 0)) : 0;
+        const nuevoId = maxId + 1;
 
-        let nuevoLogro = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
+        let nuevoLogroObj = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado };
         
         const archivo = inputNuevoImagen.files[0];
         if (archivo) {
             try {
                 const base64 = await convertirImagenABase64(archivo);
-                nuevoLogro.imagen = base64;
+                nuevoLogroObj.imagen = base64;
             } catch (error) {
                 alert("Ocurrió un error al convertir la imagen.");
                 return;
@@ -90,14 +102,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // Guardar en la base de datos
-        await database.ref("logros/" + nuevoId).set(nuevoLogro);
+        await database.ref("logros/" + nuevoId).set(nuevoLogroObj);
         
         // Agregar al array local
-        logros.push(nuevoLogro);
+        logros.push(nuevoLogroObj);
 
+        // Volver al menú y mostrar el detalle del nuevo logro
         renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        nuevoLogro.style.display = "none";
         mostrarDetalle(nuevoId);
         limpiarCampos();
+    });
+
+    // Volver desde la pantalla de nuevo logro al menú
+    btnVolverNuevo.addEventListener("click", () => {
+        nuevoLogro.style.display = "none";
+        menuLogros.style.display = "block";
     });
 
     btnEditarLogro.addEventListener("click", () => {

@@ -128,7 +128,7 @@ body.op2 button:hover {
 /* Controles superiores dentro de la card de inicio */
 .controles-card {
     display: grid;
-    grid-template-columns: 1fr auto 1fr; /* centrado real del título con botón a la derecha */
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
 }
 .controles-card .titulo-centrado {
@@ -290,7 +290,6 @@ body.op2 #detalle-notas {
     color: #f2c200;              /* amarillo */
 }
 
-/* En modo edición, habilitaremos cursor pointer vía JS o clase si quieres */
 
 /* Botón de Tema */
 .btn-tema {

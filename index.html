@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LogrosAF</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/png" href="assets/favicon.png">
+/    <link rel="stylesheet" href="css/style.css">
+/    <link rel="icon" type="image/png" href="favicon.ico">
 </head>
 <body>
     <header>
@@ -15,34 +15,41 @@
     </header>
 
     <main>
+        <!-- Pantalla inicial: formulario para ingresar nombres de jugadores y comenzar -->
         <section id="pantalla-inicial" class="pantalla">
             <div class="card">
                 <div class="controles-card">
                     <h2 class="titulo-centrado">Comenzar partida</h2>
+                    <!-- Botón para cambiar tema (modo claro/oscuro) -->
                     <button id="btn-cambiar-tema" class="btn-circular" title="Cambiar tema">🌙</button>
                 </div>
+                <!-- Campos para nombres de jugadores -->
                 <div class="form-group">
                     <label for="jugador1">Jugador 1:</label>
-                    <input type="text" id="jugador1" class="form-input" value="Atenea">
+                    <input type="text" id="jugador1" class="form-input">
                 </div>
                 <div class="form-group">
                     <label for="jugador2">Jugador 2:</label>
-                    <input type="text" id="jugador2" class="form-input" value="Fabian">
+                    <input type="text" id="jugador2" class="form-input">
                 </div>
                 <button id="btn-iniciar" class="btn-principal">Iniciar</button>
             </div>
         </section>
 
+        <!-- Menú principal de logros: muestra logros desbloqueados y bloqueados -->
         <section id="menu-logros" class="pantalla" style="display: none;">
             <div class="controles-menu">
                 <button id="btn-volver-inicio" class="btn-secundario">← Volver</button>
                 <div class="grupo-derecha">
+                    <!-- Botón para agregar un nuevo logro -->
                     <button id="btn-agregar-logro" class="btn-secundario" title="Agregar logro">
                         <span>+</span>
                     </button>
+                    <!-- Botón de cambio de tema en esta pantalla -->
                     <button id="btn-cambiar-tema-menu" class="btn-circular" title="Cambiar tema">🌙</button>
                 </div>
             </div>
+            <!-- Listas de logros (desbloqueados y bloqueados) -->
             <div class="lista-logros">
                 <h3>Logros Desbloqueados</h3>
                 <ul id="logros-desbloqueados" class="lista-desbloqueados"></ul>
@@ -51,20 +58,27 @@
             </div>
         </section>
 
+        <!-- Pantalla de detalle de un logro específico -->
         <section id="detalle-logro" class="pantalla" style="display: none;">
             <div class="card">
                 <div class="controles-menu">
                     <button id="btn-volver-menu" class="btn-secundario">← Volver</button>
                     <div class="grupo-derecha">
+                        <!-- Botón para editar el logro actual -->
                         <button id="btn-editar-logro" class="btn-secundario">🖉</button>
+                        <!-- Cambio de tema en esta pantalla -->
                         <button id="btn-cambiar-tema-detalle" class="btn-circular" title="Cambiar tema">🌙</button>
                     </div>
                 </div>
                 <h2 id="detalle-titulo"></h2>
                 <div class="info-logro">
                     <div id="detalle-imagen" class="contenedor-imagen"></div>
-                    <label id="label-cambiar-imagen" style="display: none;">Cambiar imagen: <input type="file" id="edit-imagen" accept="image/*"></label>
+                    <!-- Campo oculto para cambiar imagen (solo visible en modo edición) -->
+                    <label id="label-cambiar-imagen" style="display: none;">
+                        Cambiar imagen: <input type="file" id="edit-imagen" accept="image/*">
+                    </label>
                     <p>Fecha: <span id="detalle-fecha"></span></p>
+                    <!-- Representación visual de la dificultad (estrellas) -->
                     <div id="detalle-dificultad" class="estrellas" aria-label="Dificultad" role="img"></div>
                     <p class="notas-titulo">Notas:</p>
                     <div id="detalle-notas"></div>
@@ -73,17 +87,19 @@
             </div>
         </section>
 
-        <!-- Nueva pantalla: Crear nuevo logro -->
+        <!-- Pantalla para crear un nuevo logro -->
         <section id="nuevo-logro" class="pantalla" style="display: none;">
             <div class="card">
                 <div class="controles-menu">
                     <button id="btn-volver-nuevo" class="btn-secundario">← Volver</button>
                     <div class="grupo-derecha">
+                        <!-- Cambio de tema en esta pantalla -->
                         <button id="btn-cambiar-tema-nuevo" class="btn-circular" title="Cambiar tema">🌙</button>
                     </div>
                 </div>
                 <h2>Nuevo Logro</h2>
 
+                <!-- Formulario para crear un nuevo logro -->
                 <div class="form-group">
                     <label for="nuevo-nombre">Nombre:</label>
                     <input type="text" id="nuevo-nombre" class="form-input" maxlength="50" required>
@@ -114,8 +130,10 @@
         </section>
     </main>
 
+    <!-- Scripts de Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <!-- Script principal de la app -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

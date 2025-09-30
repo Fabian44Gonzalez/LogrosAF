@@ -89,7 +89,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectFiltro = document.getElementById("filtro-logros");
     const seccionDesbloqueados = document.getElementById("seccion-desbloqueados");
     const seccionBloqueados = document.getElementById("seccion-bloqueados");
-    const cargandoLogros = document.getElementById("cargando-logros");
 
     // Aplicar filtro al cambiar la selección
     selectFiltro.addEventListener("change", () => {
@@ -106,80 +105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // === 🔑 NUEVO: Función para cargar y renderizar logros con caché ===
-    async function cargarYRenderizarLogros() {
-        try {
-            // 1. Intentar mostrar caché inmediatamente
-            const cache = localStorage.getItem("logros_cache");
-            if (cache) {
-                logros.length = 0;
-                JSON.parse(cache).forEach(l => logros.push(l));
-                renderizarConFiltro();
-            }
-
-            // 2. Cargar datos frescos de Firebase
-            const snapshot = await database.ref("logros").once("value");
-            logros.length = 0;
-            snapshot.forEach(child => {
-                const logro = child.val();
-                logros.push(logro);
-            });
-            
-            // 3. Guardar en caché
-            localStorage.setItem("logros_cache", JSON.stringify(logros));
-            renderizarConFiltro();
-        } catch (error) {
-            console.error("Error al cargar los logros:", error);
-            cargandoLogros.textContent = "Error al cargar. ¿Estás conectado a internet?";
-            cargandoLogros.style.display = "block";
-            // Ocultar listas en caso de error
-            seccionDesbloqueados.style.display = "none";
-            seccionBloqueados.style.display = "none";
-        }
-    }
-
-    // === 🔑 NUEVO: Función para mostrar el menú con estado de carga ===
-    function mostrarMenu() {
-        // Ocultar otras pantallas
-        document.getElementById("pantalla-inicial").style.display = "none";
-        if (document.getElementById("detalle-logro")) {
-            document.getElementById("detalle-logro").style.display = "none";
-        }
-        if (document.getElementById("nuevo-logro")) {
-            document.getElementById("nuevo-logro").style.display = "none";
-        }
-
-        // Mostrar estado de carga y ocultar listas
-        cargandoLogros.style.display = "block";
-        seccionDesbloqueados.style.display = "none";
-        seccionBloqueados.style.display = "none";
-
-        // Mostrar el menú
-        document.getElementById("menu-logros").style.display = "block";
-
-        // Cargar logros en segundo plano
-        cargarYRenderizarLogros();
-    }
-
-    // Función para renderizar logros Y aplicar el filtro actual
-    const renderizarConFiltro = () => {
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
-        const valor = selectFiltro.value;
-        if (valor === "todos") {
-            seccionDesbloqueados.style.display = "block";
-            seccionBloqueados.style.display = "block";
-        } else if (valor === "desbloqueados") {
-            seccionDesbloqueados.style.display = "block";
-            seccionBloqueados.style.display = "none";
-        } else if (valor === "bloqueados") {
-            seccionDesbloqueados.style.display = "none";
-            seccionBloqueados.style.display = "block";
-        }
-        // Ocultar mensaje de carga
-        cargandoLogros.style.display = "none";
-    };
-
-    // === Referencias a elementos del DOM ===
+    // === Resto de tu código existente ===
     const pantallaInicial = document.getElementById("pantalla-inicial");
     const menuLogros = document.getElementById("menu-logros");
     const detalleLogro = document.getElementById("detalle-logro");
@@ -198,6 +124,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputNuevaNota = document.getElementById("nueva-nota");
     const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
     const inputNuevoImagen = document.getElementById("nuevo-imagen");
+
+    const { mostrarMenu } = initTemaYNavegacion();
+
+    // Función para renderizar logros Y aplicar el filtro actual
+    const renderizarConFiltro = () => {
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        // Aplicar el filtro actual (por si se cambió antes de renderizar)
+        const valor = selectFiltro.value;
+        if (valor === "todos") {
+            seccionDesbloqueados.style.display = "block";
+            seccionBloqueados.style.display = "block";
+        } else if (valor === "desbloqueados") {
+            seccionDesbloqueados.style.display = "block";
+            seccionBloqueados.style.display = "none";
+        } else if (valor === "bloqueados") {
+            seccionDesbloqueados.style.display = "none";
+            seccionBloqueados.style.display = "block";
+        }
+    };
 
     // 🔑 Proteger botón de guardar nuevo logro
     btnGuardarNuevo.addEventListener("click", async () => {
@@ -236,9 +181,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             nuevoLogro.style.display = "none";
             mostrarDetalle(nuevoId);
             limpiarCampos();
-            // Actualizar caché y renderizar
-            localStorage.setItem("logros_cache", JSON.stringify(logros));
-            cargarYRenderizarLogros(); // Recargar para reflejar cambios
+            // 🔑 Renderizar con filtro aplicado
+            renderizarConFiltro();
         } catch (error) {
             console.error("Error al guardar el nuevo logro:", error);
             alert("Ocurrió un error al guardar el logro. Inténtalo de nuevo.");
@@ -290,9 +234,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             await database.ref("logros/" + logroActual.id).set(logroActual);
             volverAMostrarDetalle(logroActual.id);
-            // Actualizar caché y renderizar
-            localStorage.setItem("logros_cache", JSON.stringify(logros));
-            cargarYRenderizarLogros(); // Recargar para reflejar cambios
+            // 🔑 Renderizar con filtro aplicado
+            renderizarConFiltro();
         } catch (error) {
             console.error("Error al guardar los cambios:", error);
             alert("Ocurrió un error al guardar los cambios. Inténtalo de nuevo.");
@@ -303,15 +246,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Resto de event listeners (usando mostrarMenu)
+    // Resto de event listeners (sin cambios)
     btnIniciar.addEventListener("click", () => {
         if (!inputJugador1.value) inputJugador1.value = "Atenea";
         if (!inputJugador2.value) inputJugador2.value = "Fabian";
-        mostrarMenu(); // ✅ Usa la nueva función
+        mostrarMenu();
+        renderizarConFiltro(); // 🔑 Usar función con filtro
     });
 
     btnVolverMenuDetalle.addEventListener("click", () => {
-        mostrarMenu(); // ✅ Usa la nueva función
+        mostrarMenu();
+        renderizarConFiltro(); // 🔑 Usar función con filtro
     });
     btnVolverInicio.addEventListener("click", () => {
         menuLogros.style.display = "none";
@@ -320,6 +265,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const btnAgregarLogro = document.getElementById("btn-agregar-logro");
     btnAgregarLogro.addEventListener("click", () => {
+        // 🔑 Verificar autenticación antes de abrir
         if (!firebase.auth().currentUser) {
             alert("Debes iniciar sesión para crear logros.");
             return;
@@ -331,6 +277,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const btnEditarLogro = document.getElementById("btn-editar-logro");
     btnEditarLogro.addEventListener("click", () => {
         if (!logroActual) return;
+        // 🔑 Verificar autenticación
         if (!firebase.auth().currentUser) {
             alert("Debes iniciar sesión para editar logros.");
             return;
@@ -340,7 +287,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     btnVolverNuevo.addEventListener("click", () => {
         nuevoLogro.style.display = "none";
-        mostrarMenu(); // ✅ Usa la nueva función
+        menuLogros.style.display = "block";
     });
 
     const limpiarCampos = () => {
@@ -351,6 +298,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         inputNuevoImagen.value = "";
     };
 
-    // Cargar logros al inicio (con caché)
-    cargarYRenderizarLogros();
+    // Cargar logros
+    try {
+        const snapshot = await database.ref("logros").once("value");
+        snapshot.forEach(child => {
+            const logro = child.val();
+            logros.push(logro);
+        });
+        renderizarConFiltro(); // 🔑 Usar función con filtro al cargar
+    } catch (error) {
+        console.error("Error al cargar los logros:", error);
+    }
 });

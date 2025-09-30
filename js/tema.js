@@ -22,7 +22,12 @@ export function initTemaYNavegacion() {
   const detalleLogro = document.getElementById("detalle-logro");
   const nuevoLogro = document.getElementById("nuevo-logro");
 
-  // Alterna entre el tema claro (por defecto) y el tema oscuro (clase "op2").
+  /**
+   * Alterna entre el tema claro (por defecto) y el tema oscuro (clase "op2").
+   * 
+   * El tema claro se define en :root (CSS), y el oscuro en body.op2.
+   * Solo se necesita gestionar la presencia/ausencia de "op2".
+   */
   const toggleTema = () => {
     document.body.classList.toggle("op2");
   };
@@ -33,7 +38,9 @@ export function initTemaYNavegacion() {
   if (btnTemaDetalle) btnTemaDetalle.addEventListener("click", toggleTema);
   if (btnTemaNuevo) btnTemaNuevo.addEventListener("click", toggleTema);
 
-  // Muestra la pantalla del menú de logros y oculta todas las demás.
+  /**
+   * Muestra la pantalla del menú de logros y oculta todas las demás.
+   */
   function mostrarMenu() {
     // Ocultar todas las pantallas excepto el menú
     pantallaInicial.style.display = "none";

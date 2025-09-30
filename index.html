@@ -53,10 +53,23 @@
                     <button id="btn-cambiar-tema-menu" class="btn-circular" title="Cambiar tema">🌙</button>
                 </div>
             </div>
-            <!-- Listas de logros (desbloqueados y bloqueados) -->
-            <div class="lista-logros">
+
+            <!-- Menú desplegable para filtrar logros -->
+            <div class="form-group" style="margin: 15px 0;">
+                <label for="filtro-logros">Filtrar:</label>
+                <select id="filtro-logros" class="form-input" style="max-width: 300px; margin: 6px auto;">
+                    <option value="todos">Todos los logros</option>
+                    <option value="desbloqueados">Solo desbloqueados</option>
+                    <option value="bloqueados">Solo bloqueados</option>
+                </select>
+            </div>
+
+            <!-- Contenedores de listas de logros (se ocultarán/mostrarán según el filtro) -->
+            <div id="seccion-desbloqueados">
                 <h3>Logros Desbloqueados</h3>
                 <ul id="logros-desbloqueados" class="lista-desbloqueados"></ul>
+            </div>
+            <div id="seccion-bloqueados">
                 <h3>Logros Bloqueados</h3>
                 <ul id="logros-bloqueados" class="lista-bloqueados"></ul>
             </div>
@@ -136,18 +149,19 @@
         </section>
     </main>
 
-    <!-- Login secreto -->
+    <!-- Login secreto (solo accesible con tecla 'L' o 5 toques en móvil) -->
     <div id="login-secreto" style="display: none;">
-        <input type="email" id="login-email" placeholder="Tu correo" value="tuemail@dominio.com">
+        <input type="email" id="login-email" placeholder="Tu correo" value="fabito0404@gmail.com">
         <input type="password" id="login-password" placeholder="Contraseña">
         <button id="btn-login">Iniciar sesión</button>
         <button id="btn-logout" style="display:none;">Cerrar sesión</button>
     </div>
 
-    <!-- Scripts de Firebase -->
+    <!-- Scripts de Firebase (versión 8.10.0) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> <!-- ✅ SDK de Auth -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <!-- Script principal de la app (módulo ES6) -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

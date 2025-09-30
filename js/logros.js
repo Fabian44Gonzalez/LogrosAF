@@ -93,8 +93,9 @@ export function mostrarDetalle(id) {
     // Mostrar notas
     document.getElementById("detalle-notas").textContent = logro.notas;
 
-    // Mostrar botón de edición, ocultar guardar
-    document.getElementById("btn-editar-logro").style.display = "inline-block";
+    // 🔑 Mostrar botón "Editar" SOLO si estás autenticado
+    const autenticado = firebase.auth().currentUser;
+    document.getElementById("btn-editar-logro").style.display = autenticado ? "inline-block" : "none";
     document.getElementById("btn-guardar-logro").style.display = "none";
 }
 
@@ -200,9 +201,9 @@ export function volverAMostrarDetalle(id) {
     detalleContenedor.querySelector('#edit-notas')?.remove();
     detalleContenedor.querySelector('#edit-desbloqueado')?.remove();
 
-    // Ocultar controles de edición
-    document.getElementById("label-cambiar-imagen").style.display = "none";
-    document.getElementById("btn-editar-logro").style.display = "inline-block";
+    // 🔑 Actualizar visibilidad del botón "Editar"
+    const autenticado = firebase.auth().currentUser;
+    document.getElementById("btn-editar-logro").style.display = autenticado ? "inline-block" : "none";
     document.getElementById("btn-guardar-logro").style.display = "none";
 }
 

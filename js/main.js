@@ -14,12 +14,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     const emailInput = document.getElementById("login-email");
     const passwordInput = document.getElementById("login-password");
 
-    // 🔑 Mostrar login al presionar 'L'
+    // 🔑 Mostrar login al presionar 'L' (solo escritorio)
     document.addEventListener("keydown", (e) => {
         if (e.key === "l" || e.key === "L") {
             loginSecreto.style.display = "block";
         }
     });
+
+    // 🔑 Login secreto por toque (móvil): 5 toques en el título
+    let toques = 0;
+    let ultimoToque = 0;
+    const titulo = document.querySelector("header h1");
+    if (titulo) {
+        titulo.addEventListener("click", () => {
+            const ahora = Date.now();
+            if (ahora - ultimoToque < 500) {
+                toques++;
+            } else {
+                toques = 1;
+            }
+            ultimoToque = ahora;
+
+            if (toques >= 5) {
+                loginSecreto.style.display = "block";
+                toques = 0;
+            }
+        });
+    }
 
     // 🔑 Manejar login
     btnLogin.addEventListener("click", async () => {
@@ -64,6 +85,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (btnEditar) btnEditar.style.display = autenticado ? "inline-block" : "none";
     }
 
+    // === 🔑 NUEVO: Lógica del filtro de logros ===
+    const selectFiltro = document.getElementById("filtro-logros");
+    const seccionDesbloqueados = document.getElementById("seccion-desbloqueados");
+    const seccionBloqueados = document.getElementById("seccion-bloqueados");
+
+    // Aplicar filtro al cambiar la selección
+    selectFiltro.addEventListener("change", () => {
+        const valor = selectFiltro.value;
+        if (valor === "todos") {
+            seccionDesbloqueados.style.display = "block";
+            seccionBloqueados.style.display = "block";
+        } else if (valor === "desbloqueados") {
+            seccionDesbloqueados.style.display = "block";
+            seccionBloqueados.style.display = "none";
+        } else if (valor === "bloqueados") {
+            seccionDesbloqueados.style.display = "none";
+            seccionBloqueados.style.display = "block";
+        }
+    });
+
     // === Resto de tu código existente ===
     const pantallaInicial = document.getElementById("pantalla-inicial");
     const menuLogros = document.getElementById("menu-logros");
@@ -85,6 +126,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
     const { mostrarMenu } = initTemaYNavegacion();
+
+    // Función para renderizar logros Y aplicar el filtro actual
+    const renderizarConFiltro = () => {
+        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        // Aplicar el filtro actual (por si se cambió antes de renderizar)
+        const valor = selectFiltro.value;
+        if (valor === "todos") {
+            seccionDesbloqueados.style.display = "block";
+            seccionBloqueados.style.display = "block";
+        } else if (valor === "desbloqueados") {
+            seccionDesbloqueados.style.display = "block";
+            seccionBloqueados.style.display = "none";
+        } else if (valor === "bloqueados") {
+            seccionDesbloqueados.style.display = "none";
+            seccionBloqueados.style.display = "block";
+        }
+    };
 
     // 🔑 Proteger botón de guardar nuevo logro
     btnGuardarNuevo.addEventListener("click", async () => {
@@ -120,10 +178,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             await database.ref("logros/" + nuevoId).set(nuevoLogroObj);
             logros.push(nuevoLogroObj);
 
-            renderizarLogros(logrosDesbloqueados, logrosBloqueados);
             nuevoLogro.style.display = "none";
             mostrarDetalle(nuevoId);
             limpiarCampos();
+            // 🔑 Renderizar con filtro aplicado
+            renderizarConFiltro();
         } catch (error) {
             console.error("Error al guardar el nuevo logro:", error);
             alert("Ocurrió un error al guardar el logro. Inténtalo de nuevo.");
@@ -174,8 +233,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             await database.ref("logros/" + logroActual.id).set(logroActual);
-            renderizarLogros(logrosDesbloqueados, logrosBloqueados);
             volverAMostrarDetalle(logroActual.id);
+            // 🔑 Renderizar con filtro aplicado
+            renderizarConFiltro();
         } catch (error) {
             console.error("Error al guardar los cambios:", error);
             alert("Ocurrió un error al guardar los cambios. Inténtalo de nuevo.");
@@ -191,12 +251,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!inputJugador1.value) inputJugador1.value = "Atenea";
         if (!inputJugador2.value) inputJugador2.value = "Fabian";
         mostrarMenu();
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        renderizarConFiltro(); // 🔑 Usar función con filtro
     });
 
     btnVolverMenuDetalle.addEventListener("click", () => {
         mostrarMenu();
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        renderizarConFiltro(); // 🔑 Usar función con filtro
     });
     btnVolverInicio.addEventListener("click", () => {
         menuLogros.style.display = "none";
@@ -245,7 +305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const logro = child.val();
             logros.push(logro);
         });
-        renderizarLogros(logrosDesbloqueados, logrosBloqueados);
+        renderizarConFiltro(); // 🔑 Usar función con filtro al cargar
     } catch (error) {
         console.error("Error al cargar los logros:", error);
     }

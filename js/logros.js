@@ -93,10 +93,18 @@ export function mostrarDetalle(id) {
     // Mostrar notas
     document.getElementById("detalle-notas").textContent = logro.notas;
 
-    // 🔑 Mostrar botón "Editar" SOLO si estás autenticado
-    const autenticado = firebase.auth().currentUser;
-    document.getElementById("btn-editar-logro").style.display = autenticado ? "inline-block" : "none";
+    // 🔑 NUEVO: Ocultar botón "Editar" por defecto y mostrarlo solo si autenticado
+    document.getElementById("btn-editar-logro").style.display = "none";
     document.getElementById("btn-guardar-logro").style.display = "none";
+
+    // Verificar autenticación de forma segura
+    if (typeof firebase !== 'undefined') {
+        const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+            document.getElementById("btn-editar-logro").style.display = user ? "inline-block" : "none";
+            // Cancelar el listener después de usarlo (evita fugas de memoria)
+            unsubscribe();
+        });
+    }
 }
 
 /**
@@ -201,10 +209,16 @@ export function volverAMostrarDetalle(id) {
     detalleContenedor.querySelector('#edit-notas')?.remove();
     detalleContenedor.querySelector('#edit-desbloqueado')?.remove();
 
-    // 🔑 Actualizar visibilidad del botón "Editar"
-    const autenticado = firebase.auth().currentUser;
-    document.getElementById("btn-editar-logro").style.display = autenticado ? "inline-block" : "none";
+    // 🔑 NUEVO: Ocultar botón "Editar" por defecto y mostrarlo solo si autenticado
+    document.getElementById("btn-editar-logro").style.display = "none";
     document.getElementById("btn-guardar-logro").style.display = "none";
+
+    if (typeof firebase !== 'undefined') {
+        const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+            document.getElementById("btn-editar-logro").style.display = user ? "inline-block" : "none";
+            unsubscribe();
+        });
+    }
 }
 
 /**

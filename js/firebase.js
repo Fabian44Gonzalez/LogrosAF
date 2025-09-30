@@ -1,8 +1,8 @@
 // js/firebase.js
 
+// Inicializa Firebase con la configuración del proyecto.
 export function initFirebase() {
-    // AVISO DE SEGURIDAD: Estas credenciales están expuestas.
-    // Asegúrate de configurar reglas de seguridad estrictas en Firebase para proteger tu base de datos.
+    // Configuración del proyecto de Firebase (valores públicos para apps web)
     const firebaseConfig = {
         apiKey: "AIzaSyDk9SmqTIy_02mG7H5byhXqMz0xYJ6t7OA",
         authDomain: "logrosaf-1632f.firebaseapp.com",
@@ -13,6 +13,9 @@ export function initFirebase() {
         appId: "1:753688049020:web:98f91e31e35e077eab20f9"
     };
 
+    // Inicializa la app de Firebase usando los scripts cargados globalmente en el HTML
     firebase.initializeApp(firebaseConfig);
+
+    // Devuelve una referencia a la base de datos en tiempo real (Realtime Database)
     return firebase.database();
 }

@@ -1,13 +1,23 @@
-// js/main.js
+// Importaciones de módulos externos
 import { initFirebase } from "./firebase.js";
 import { initTemaYNavegacion } from "./tema.js";
-import { logros, renderizarLogros, mostrarDetalle, editarLogro, volverAMostrarDetalle, logroActual, setLogroActual, convertirImagenABase64 } from "./logros.js";
+import { 
+    logros, 
+    renderizarLogros, 
+    mostrarDetalle, 
+    editarLogro, 
+    volverAMostrarDetalle, 
+    logroActual, 
+    setLogroActual, 
+    convertirImagenABase64 
+} from "./logros.js";
 
+// Ejecutar cuando el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", async () => {
     // Inicializar Firebase y obtener una referencia a la base de datos
     const database = initFirebase();
 
-    // Referencias a elementos del DOM
+    // === Referencias a elementos del DOM ===
     const pantallaInicial = document.getElementById("pantalla-inicial");
     const menuLogros = document.getElementById("menu-logros");
     const detalleLogro = document.getElementById("detalle-logro");
@@ -36,21 +46,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputNuevoDesbloqueado = document.getElementById("nuevo-desbloqueado");
     const inputNuevoImagen = document.getElementById("nuevo-imagen");
 
-    // Llama a la función de inicialización del tema y navegación
+    // === Inicializar tema y navegación ===
+    // Obtiene la función `mostrarMenu` para cambiar de pantalla
     const { mostrarMenu } = initTemaYNavegacion();
 
-    // Event Listeners
+    // === Event Listeners ===
+
+    // Botón "Iniciar" en pantalla inicial
     btnIniciar.addEventListener("click", () => {
+        // Asegurar valores por defecto si los inputs están vacíos
         if (!inputJugador1.value) inputJugador1.value = "Atenea";
         if (!inputJugador2.value) inputJugador2.value = "Fabian";
+        // Mostrar el menú de logros
         mostrarMenu();
+        // Renderizar listas de logros
         renderizarLogros(logrosDesbloqueados, logrosBloqueados);
     });
 
+    // Volver al menú desde el detalle de un logro
     btnVolverMenuDetalle.addEventListener("click", () => {
         mostrarMenu();
         renderizarLogros(logrosDesbloqueados, logrosBloqueados);
     });
+
+    // Volver a la pantalla inicial desde el menú
     btnVolverInicio.addEventListener("click", () => {
         menuLogros.style.display = "none";
         pantallaInicial.style.display = "block";
@@ -62,41 +81,50 @@ document.addEventListener("DOMContentLoaded", async () => {
         nuevoLogro.style.display = "block";
     });
 
-    // Guardar nuevo logro
+    // Guardar nuevo logro (con validación y subida a Firebase)
     btnGuardarNuevo.addEventListener("click", async () => {
         const nombre = inputNuevoNombre.value.trim();
         const fecha = inputNuevaFecha.value.trim();
         const notas = inputNuevaNota.value.trim();
         const desbloqueado = inputNuevoDesbloqueado.checked;
 
+        // Validaciones de entrada
         if (!nombre) { alert("El nombre del logro es obligatorio."); return; }
         if (nombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
         if (notas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
 
-        // Estado de carga en botón
+        // Estado de carga en botón (mejora UX)
         const prevText = btnGuardarNuevo.textContent;
         btnGuardarNuevo.textContent = "Guardando...";
         btnGuardarNuevo.disabled = true;
         btnGuardarNuevo.setAttribute("aria-busy", "true");
 
         try {
-            // Calcular el siguiente ID disponible de forma segura
+            // Generar ID único incremental (basado en logros existentes)
             const maxId = logros.length > 0 ? Math.max(...logros.map(l => Number(l.id) || 0)) : 0;
             const nuevoId = maxId + 1;
 
-            // Dificultad por defecto 0 (sin estrellas) en creación
-            let nuevoLogroObj = { id: nuevoId, nombre, fecha: fecha || "--/--/----", notas: notas || "Sin notas", desbloqueado: !!desbloqueado, dificultad: 0 };
+            // Crear objeto del nuevo logro (con valores por defecto)
+            let nuevoLogroObj = { 
+                id: nuevoId, 
+                nombre, 
+                fecha: fecha || "--/--/----", 
+                notas: notas || "Sin notas", 
+                desbloqueado: !!desbloqueado, 
+                dificultad: 0 // por defecto sin estrellas
+            };
 
+            // Procesar imagen si se ha seleccionado
             const archivo = inputNuevoImagen.files[0];
             if (archivo) {
                 const base64 = await convertirImagenABase64(archivo);
                 nuevoLogroObj.imagen = base64;
             }
 
-            // Guardar en la base de datos
+            // Guardar en Firebase
             await database.ref("logros/" + nuevoId).set(nuevoLogroObj);
 
-            // Agregar al array local
+            // Actualizar lista local
             logros.push(nuevoLogroObj);
 
             // Volver al menú y mostrar el detalle del nuevo logro
@@ -108,6 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error al guardar el nuevo logro:", error);
             alert("Ocurrió un error al guardar el logro. Inténtalo de nuevo.");
         } finally {
+            // Restaurar estado del botón
             btnGuardarNuevo.textContent = prevText;
             btnGuardarNuevo.disabled = false;
             btnGuardarNuevo.removeAttribute("aria-busy");
@@ -120,23 +149,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         menuLogros.style.display = "block";
     });
 
+    // Editar logro actual (desde pantalla de detalle)
     btnEditarLogro.addEventListener("click", () => {
         if (!logroActual) return;
         editarLogro(logroActual);
     });
 
+    // Guardar cambios en un logro editado
     btnGuardar.addEventListener("click", async () => {
         if (!logroActual) return;
 
+        // Obtener valores del formulario de edición
         const nuevoNombre = document.getElementById("edit-nombre").value.trim();
         const nuevaFecha = document.getElementById("edit-fecha").value.trim();
         const nuevasNotas = document.getElementById("edit-notas").value.trim();
         const desbloqueado = document.getElementById("edit-desbloqueado").checked;
 
-        // Leer dificultad elegida en estrellas (dataset.valor)
+        // Leer dificultad desde el contenedor de estrellas (usando dataset)
         const contDificultad = document.getElementById("detalle-dificultad");
         const nuevaDificultad = Number(contDificultad?.dataset?.valor || 0);
 
+        // Validaciones
         if (!nuevoNombre) { alert("El nombre del logro es obligatorio."); return; }
         if (nuevoNombre.length > 50) { alert("El nombre no puede superar 50 caracteres."); return; }
         if (nuevasNotas.length > 200) { alert("Las notas no pueden superar 200 caracteres."); return; }
@@ -148,37 +181,39 @@ document.addEventListener("DOMContentLoaded", async () => {
         btnGuardar.setAttribute("aria-busy", "true");
 
         try {
-            // Actualizar el objeto local
+            // Actualizar objeto local
             logroActual.nombre = nuevoNombre;
             logroActual.fecha = nuevaFecha || "--/--/----";
             logroActual.notas = nuevasNotas || "Sin notas";
             logroActual.desbloqueado = desbloqueado;
-            logroActual.dificultad = nuevaDificultad; // persistir dificultad
+            logroActual.dificultad = nuevaDificultad;
 
+            // Procesar nueva imagen si se ha seleccionado
             const inputEditImagen = document.getElementById("edit-imagen");
             const archivo = inputEditImagen.files[0];
-
             if (archivo) {
                 const base64 = await convertirImagenABase64(archivo);
                 logroActual.imagen = base64;
             }
 
-            // Guardar los cambios en la base de datos
+            // Guardar en Firebase
             await database.ref("logros/" + logroActual.id).set(logroActual);
 
-            // Volver a renderizar para reflejar los cambios
+            // Actualizar UI
             renderizarLogros(logrosDesbloqueados, logrosBloqueados);
             volverAMostrarDetalle(logroActual.id);
         } catch (error) {
             console.error("Error al guardar los cambios:", error);
             alert("Ocurrió un error al guardar los cambios. Inténtalo de nuevo.");
         } finally {
+            // Restaurar estado del botón
             btnGuardar.textContent = prevText;
             btnGuardar.disabled = false;
             btnGuardar.removeAttribute("aria-busy");
         }
     });
 
+    // Función auxiliar para limpiar campos del formulario de nuevo logro
     const limpiarCampos = () => {
         inputNuevoNombre.value = "";
         inputNuevaFecha.value = "";
@@ -187,7 +222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         inputNuevoImagen.value = "";
     };
 
-    // Cargar logros desde Firebase
+    // Cargar logros desde Firebase al iniciar 
     try {
         const snapshot = await database.ref("logros").once("value");
         snapshot.forEach(child => {

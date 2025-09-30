@@ -2,12 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <!-- Asegura que la página se vea bien en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LogrosAF</title>
-/    <link rel="stylesheet" href="css/style.css">
-/    <link rel="icon" type="image/png" href="favicon.ico">
+    <!-- Enlace al archivo de estilos principal -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Ícono de pestaña (favicon) -->
+    <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>
+    <!-- Encabezado con el título de la aplicación -->
     <header>
         <div class="header-jugadores">
             <h1>LogrosAF</h1>
@@ -23,14 +27,14 @@
                     <!-- Botón para cambiar tema (modo claro/oscuro) -->
                     <button id="btn-cambiar-tema" class="btn-circular" title="Cambiar tema">🌙</button>
                 </div>
-                <!-- Campos para nombres de jugadores -->
+                <!-- Campos para nombres de jugadores con valores predeterminados -->
                 <div class="form-group">
                     <label for="jugador1">Jugador 1:</label>
-                    <input type="text" id="jugador1" class="form-input">
+                    <input type="text" id="jugador1" class="form-input" value="Atenea">
                 </div>
                 <div class="form-group">
                     <label for="jugador2">Jugador 2:</label>
-                    <input type="text" id="jugador2" class="form-input">
+                    <input type="text" id="jugador2" class="form-input" value="Fabian">
                 </div>
                 <button id="btn-iniciar" class="btn-principal">Iniciar</button>
             </div>
@@ -72,6 +76,7 @@
                 </div>
                 <h2 id="detalle-titulo"></h2>
                 <div class="info-logro">
+                    <!-- Contenedor para la imagen del logro -->
                     <div id="detalle-imagen" class="contenedor-imagen"></div>
                     <!-- Campo oculto para cambiar imagen (solo visible en modo edición) -->
                     <label id="label-cambiar-imagen" style="display: none;">
@@ -82,6 +87,7 @@
                     <div id="detalle-dificultad" class="estrellas" aria-label="Dificultad" role="img"></div>
                     <p class="notas-titulo">Notas:</p>
                     <div id="detalle-notas"></div>
+                    <!-- Botón de guardar (solo visible al editar) -->
                     <button id="btn-guardar-logro" class="btn-principal" style="display: none;">Guardar</button>
                 </div>
             </div>
@@ -130,10 +136,18 @@
         </section>
     </main>
 
+    <!-- Login secreto -->
+    <div id="login-secreto">
+        <input type="email" id="login-email" placeholder="Tu correo" value="fabito0404@gmail.com">
+        <input type="password" id="login-password" placeholder="Contraseña">
+        <button id="btn-login">Iniciar sesión</button>
+        <button id="btn-logout" style="display:none;">Cerrar sesión</button>
+    </div>
+
     <!-- Scripts de Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <!-- Script principal de la app -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> <!-- ✅ SDK de Auth -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

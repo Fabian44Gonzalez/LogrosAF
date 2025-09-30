@@ -1,12 +1,17 @@
 // js/logros.js
 
-// Array global que almacena todos los logros cargados desde Firebase
+// === Estado global ===
+// Lista de logros cargados desde Firebase
 export const logros = [];
-
-// Variable global que guarda la referencia al logro actualmente en vista (detalle)
+// Referencia al logro actualmente en vista (detalle)
 export let logroActual = null;
 
-// Convertir imagen a Base64
+/**
+ * Convierte un archivo de imagen a una cadena Base64.
+ * 
+ * @param {File} file - Archivo de imagen seleccionado por el usuario.
+ * @returns {Promise<string>} Cadena Base64 de la imagen.
+ */
 export function convertirImagenABase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -16,88 +21,104 @@ export function convertirImagenABase64(file) {
     });
 }
 
-// Renderizar logros en el menú
-// Recibe referencias a los contenedores <ul> para logros desbloqueados y bloqueados
+/**
+ * Renderiza las listas de logros desbloqueados y bloqueados en el menú.
+ * 
+ * @param {HTMLElement} logrosDesbloqueados - Contenedor <ul> para logros desbloqueados.
+ * @param {HTMLElement} logrosBloqueados - Contenedor <ul> para logros bloqueados.
+ */
 export function renderizarLogros(logrosDesbloqueados, logrosBloqueados) {
-    // Limpiar el contenido actual de ambas listas
+    // Limpiar listas actuales
     logrosDesbloqueados.innerHTML = "";
     logrosBloqueados.innerHTML = "";
 
-    // Iterar sobre todos los logros y crear un botón por cada uno
+    // 🔑 Verificar si el usuario está autenticado
+    const autenticado = firebase.auth().currentUser;
+
+    // Crear un elemento <li> con botón para cada logro
     logros.forEach(logro => {
         const li = document.createElement("li");
         const btn = document.createElement("button");
-        // Mostrar emoji según si está desbloqueado o no
         btn.textContent = logro.desbloqueado
             ? `${logro.nombre} ✅`
             : `${logro.nombre} 🔒`;
-        // Al hacer clic, mostrar el detalle del logro
+        // Al hacer clic, muestra el detalle del logro (siempre permitido)
         btn.addEventListener("click", () => mostrarDetalle(logro.id));
         li.appendChild(btn);
-        // Añadir el elemento a la lista correspondiente
+        // Añadir a la lista correspondiente
         if (logro.desbloqueado) logrosDesbloqueados.appendChild(li);
         else logrosBloqueados.appendChild(li);
     });
 }
 
-// Mostrar detalle del logro
-// Recibe el ID del logro a mostrar
+/**
+ * Muestra la pantalla de detalle de un logro específico.
+ * 
+ * @param {string|number} id - ID del logro a mostrar.
+ */
 export function mostrarDetalle(id) {
-    // Buscar el logro en el array global (comparación flexible de tipo)
+    // Buscar logro por ID (comparación flexible de tipo)
     const logro = logros.find(l => String(l.id) === String(id));
     if (!logro) return;
     logroActual = logro;
 
-    // Cambiar visibilidad de las pantallas: ocultar menú, mostrar detalle
+    // Cambiar visibilidad de pantallas
     document.getElementById("menu-logros").style.display = "none";
     document.getElementById("detalle-logro").style.display = "block";
 
-    // Actualizar el título del detalle
+    // Actualizar título
     document.getElementById("detalle-titulo").textContent = `Logro: ${logro.nombre}`;
 
-    // Renderizar la imagen del logro (si existe)
+    // Renderizar imagen
     const contenedorImagen = document.getElementById("detalle-imagen");
     contenedorImagen.innerHTML = "";
     if (logro.imagen) {
         const img = document.createElement("img");
         img.src = logro.imagen;
         img.alt = `Imagen del logro "${logro.nombre}"`;
-        // El tamaño lo controla el contenedor por CSS (object-fit: contain)
         contenedorImagen.appendChild(img);
     } else {
         contenedorImagen.textContent = "(espacio para foto)";
     }
 
-    // Ocultar el control para cambiar imagen (solo visible en modo edición)
+    // Ocultar control de cambio de imagen (solo visible en edición)
     document.getElementById("label-cambiar-imagen").style.display = "none";
 
-    // Mostrar la fecha del logro
+    // Mostrar fecha
     document.getElementById("detalle-fecha").textContent = logro.fecha;
 
-    // Renderizar la dificultad como estrellas (modo visualización)
+    // Renderizar dificultad como estrellas no editables
     renderEstrellasDetalle(logro.dificultad || 0);
 
-    // Mostrar las notas del logro
+    // Mostrar notas
     document.getElementById("detalle-notas").textContent = logro.notas;
 
-    // Mostrar botón de edición y ocultar botón de guardar
+    // Mostrar botón de edición, ocultar guardar
     document.getElementById("btn-editar-logro").style.display = "inline-block";
     document.getElementById("btn-guardar-logro").style.display = "none";
 }
 
-// Función auxiliar: renderiza estrellas en modo visualización (no editable)
+/**
+ * Renderiza las estrellas de dificultad en modo visualización (no editable).
+ * 
+ * @param {number} valor - Número de estrellas activas (0 a 5).
+ */
 function renderEstrellasDetalle(valor) {
     const cont = document.getElementById("detalle-dificultad");
     cont.innerHTML = "";
     for (let i = 1; i <= 5; i++) {
         const span = document.createElement("span");
         span.className = `estrella ${i <= valor ? 'activa' : ''}`;
-        span.textContent = "★"; // mostramos estrellas llenas/ vacías por color
+        span.textContent = "★";
         cont.appendChild(span);
     }
 }
 
-// Función auxiliar: renderiza estrellas en modo edición (interactivo)
+/**
+ * Renderiza las estrellas de dificultad en modo edición (interactivo).
+ * 
+ * @param {number} valorInicial - Número inicial de estrellas activas.
+ */
 function renderEstrellasEditable(valorInicial = 0) {
     const cont = document.getElementById("detalle-dificultad");
     cont.innerHTML = "";
@@ -116,26 +137,28 @@ function renderEstrellasEditable(valorInicial = 0) {
                 if (idx < i) el.classList.add('activa');
                 else el.classList.remove('activa');
             });
-            // Guardar el valor seleccionado en un atributo de datos
+            // Guardar valor seleccionado en dataset
             cont.dataset.valor = String(i);
         });
         cont.appendChild(btn);
     }
-    // Guardar valor inicial en el dataset
+    // Inicializar dataset con valor por defecto
     cont.dataset.valor = String(valorInicial || 0);
 }
 
-// Editar un logro existente
-// Convierte la vista de detalle en un formulario editable
+/**
+ * Convierte la vista de detalle en un formulario editable.
+ * 
+ * @param {Object} logro - Objeto del logro a editar.
+ */
 export function editarLogro(logro) {
     if (!logro) return;
 
-    // Obtener referencias a los elementos a modificar
+    // Reemplazar contenido de título, fecha y notas con inputs
     const titulo = document.getElementById("detalle-titulo");
     const fecha = document.getElementById("detalle-fecha");
     const notas = document.getElementById("detalle-notas");
 
-    // Reemplazar el contenido de los elementos con inputs editables
     titulo.innerHTML = `Logro: <input type="text" id="edit-nombre" class="form-input" value="${logro.nombre}" maxlength="50">`;
     fecha.innerHTML = `Fecha: <input type="date" id="edit-fecha" class="form-input" value="${logro.fecha}">`;
     notas.innerHTML = `
@@ -143,31 +166,34 @@ export function editarLogro(logro) {
         <label>Desbloqueado: <input type="checkbox" id="edit-desbloqueado" ${logro.desbloqueado ? "checked" : ""}></label>
     `;
 
-    // Renderizar estrellas en modo edición
+    // Renderizar estrellas editables
     renderEstrellasEditable(Number(logro.dificultad) || 0);
 
-    // Mostrar control para cambiar imagen y botón de guardar
+    // Mostrar control de imagen y botón de guardar
     document.getElementById("label-cambiar-imagen").style.display = "block";
     document.getElementById("btn-editar-logro").style.display = "none";
     document.getElementById("btn-guardar-logro").style.display = "inline-block";
 }
 
-// Volver a mostrar el detalle del logro en modo visualización (después de guardar o cancelar)
+/**
+ * Vuelve a mostrar el detalle del logro en modo visualización (después de guardar o cancelar).
+ * 
+ * @param {string|number} id - ID del logro a mostrar.
+ */
 export function volverAMostrarDetalle(id) {
-    // Buscar el logro por ID
     const logro = logros.find(l => String(l.id) === String(id));
     if (!logro) return;
     logroActual = logro;
 
-    // Restaurar el contenido de texto en los elementos
+    // Restaurar contenido de texto
     document.getElementById("detalle-titulo").textContent = `Logro: ${logro.nombre}`;
     document.getElementById("detalle-fecha").textContent = logro.fecha;
     document.getElementById("detalle-notas").textContent = logro.notas;
 
-    // Renderizar dificultad en modo visualización
+    // Renderizar estrellas no editables
     renderEstrellasDetalle(Number(logro.dificultad) || 0);
     
-    // Eliminar los elementos de edición del DOM (si existen)
+    // Eliminar elementos de edición del DOM
     const detalleContenedor = document.getElementById('detalle-logro');
     detalleContenedor.querySelector('#edit-nombre')?.remove();
     detalleContenedor.querySelector('#edit-fecha')?.remove();
@@ -180,7 +206,11 @@ export function volverAMostrarDetalle(id) {
     document.getElementById("btn-guardar-logro").style.display = "none";
 }
 
-// Establecer el logro actual
+/**
+ * Establece el logro actual (útil para pruebas o inicialización externa).
+ * 
+ * @param {Object} logro - Objeto del logro.
+ */
 export function setLogroActual(logro) {
     logroActual = logro;
 }

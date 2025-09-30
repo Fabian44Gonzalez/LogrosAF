@@ -1,4 +1,6 @@
-/* Opción 1: Tema Claro y Define las variables de color por defecto (modo claro). */
+/* Opción 1: Tema Claro
+  Define las variables de color por defecto (modo claro).
+  Se aplican automáticamente al <body> sin clase. */
 :root {
     --color-fondo: #f9f9f9; 
     --color-card: #ffffff;
@@ -6,16 +8,17 @@
     --color-borde: #e0e0e0;
     --color-principal: #ff85a2;       
     --color-secundario: #ffabc7;      
-    --color-destacado: #ffeef2;
+    --color-destacado: #ffeef2;       
 }
 
-/* Opción 2: Tema Oscuro */
+/* Opción 2: Tema Oscuro (Tonos fríos)
+  Sobrescribe las variables cuando el body tiene la clase "op2".*/
 body.op2 {
     --color-fondo: #1c1c1c; 
     --color-card: #2c2c2c;
     --color-texto: #f0f0f0;
     --color-borde: #555;
-    --color-principal: #ffb6c1;      
+    --color-principal: #ffb6c1;       
     --color-secundario: #f5d6e0;      
     --color-destacado: #454545;       
 }
@@ -61,13 +64,13 @@ section {
     text-align: center;
 }
 
-/* Efecto hover en secciones */
+/* Efecto hover en secciones: ligera elevación */
 section:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Sombras más intensas en modo oscuro*/
+/* Sombras más intensas en modo oscuro para mejor percepción de profundidad */
 body.op2 section {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
@@ -131,7 +134,7 @@ body.op2 button:hover {
     align-items: center;
 }
 
-/* Controles en la pantalla inicial */
+/* Layout de controles en la pantalla inicial (título centrado + botón de tema a la derecha) */
 .controles-card {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -158,7 +161,7 @@ body.op2 button:hover {
     justify-content: center;
 }
 
-/* Estilos para campos de formulario (input) */
+/* Estilos para campos de formulario (input, textarea) */
 .form-input {
     background: var(--color-card);
     color: var(--color-texto);
@@ -219,7 +222,7 @@ body.op2 li:hover {
     background: rgba(255, 182, 193, 0.1);
 }
 
-/* Contenedor de imagen */
+/* Contenedor de imagen (en detalle de logro y posibles usos futuros) */
 .contenedor-imagen, .imagen-logro {
     width: 220px;
     aspect-ratio: 4 / 3;
@@ -273,6 +276,7 @@ body.op2 #detalle-notas {
     font-weight: 600;
 }
 
+/* Estilo para el título de dificultad (aunque no se usa directamente en HTML actual) */
 .dificultad-titulo {
     margin: 8px 0 6px;
     text-align: left;
@@ -289,14 +293,47 @@ body.op2 #detalle-notas {
     margin: 8px 0 10px;
 }
 
+/* Estilo base para cada estrella (vacía) */
 .estrella {
     cursor: default;
     color: #c9c9c9;
     transition: color 0.2s ease;
 }
 
+/* Estrella activa (llena) */
 .estrella.activa {
     color: #f2c200;
+}
+
+/* Login secreto (oculto por defecto) */
+#login-secreto {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--color-card);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: none;
+    border: 1px solid var(--color-borde);
+}
+
+#login-secreto input {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+    border: 1px solid var(--color-borde);
+    border-radius: 5px;
+    background: var(--color-card);
+    color: var(--color-texto);
+}
+
+#login-secreto button {
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
 }
 
 /* Adaptabilidad para dispositivos móviles */

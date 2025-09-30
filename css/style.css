@@ -1,27 +1,26 @@
-
-/* Opción 1: Tema Claro (Minimalista) */
+/* Opción 1: Tema Claro y Define las variables de color por defecto (modo claro). */
 :root {
     --color-fondo: #f9f9f9; 
     --color-card: #ffffff;
     --color-texto: #444;
     --color-borde: #e0e0e0;
-    --color-principal: #ff85a2;
-    --color-secundario: #ffabc7;
+    --color-principal: #ff85a2;       
+    --color-secundario: #ffabc7;      
     --color-destacado: #ffeef2;
 }
 
-/* Opción 2: Tema Oscuro (Tonos fríos) */
+/* Opción 2: Tema Oscuro */
 body.op2 {
     --color-fondo: #1c1c1c; 
     --color-card: #2c2c2c;
     --color-texto: #f0f0f0;
     --color-borde: #555;
-    --color-principal: #ffb6c1; 
-    --color-secundario: #f5d6e0; 
-    --color-destacado: #454545; 
+    --color-principal: #ffb6c1;      
+    --color-secundario: #f5d6e0;      
+    --color-destacado: #454545;       
 }
 
-/* Estilos Generales y Layout */
+/* Estilos Generales y define la estructura base de la página. */
 body {
     font-family: "Trebuchet MS", sans-serif;
     background: var(--color-fondo);
@@ -32,9 +31,10 @@ body {
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    transition: background 0.5s ease;
+    transition: background 0.5s ease; /* Transición suave al cambiar tema */
 }
 
+/* Estilos para títulos (h1, h2, h3) */
 h1, h2, h3 {
     color: var(--color-principal);
     font-weight: bold;
@@ -42,6 +42,7 @@ h1, h2, h3 {
     letter-spacing: 2px;
 }
 
+/* Ajustes adicionales para títulos en modo oscuro */
 body.op2 h1, body.op2 h2, body.op2 h3 {
     letter-spacing: 3px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
@@ -60,11 +61,13 @@ section {
     text-align: center;
 }
 
+/* Efecto hover en secciones */
 section:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
+/* Sombras más intensas en modo oscuro*/
 body.op2 section {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
@@ -73,7 +76,7 @@ body.op2 section:hover {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* Botones y Navegación */
+/* Estilos generales para botones */
 button {
     background: var(--color-principal);
     color: white;
@@ -95,6 +98,7 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Ajustes para botones en modo oscuro */
 body.op2 button {
     background: var(--color-principal);
     color: #1c1c1c;
@@ -107,10 +111,12 @@ body.op2 button:hover {
     transform: translateY(-3px);
 }
 
+/* Botones de acción principal: ocupan todo el ancho */
 #btn-iniciar, #btn-guardar-logro {
     width: 100%;
 }
 
+/* Barra de controles superior en pantallas (menú/logro) */
 .controles-menu {
     display: flex;
     justify-content: space-between;
@@ -118,14 +124,14 @@ body.op2 button:hover {
     margin-bottom: 20px;
 }
 
-/* Grupo de controles a la derecha del menú ("+" y tema) */
+/* Grupo de botones a la derecha (agregar logro + tema) */
 .grupo-derecha {
     display: flex;
     gap: 8px;
     align-items: center;
 }
 
-/* Controles superiores dentro de la card de inicio */
+/* Controles en la pantalla inicial */
 .controles-card {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -140,7 +146,7 @@ body.op2 button:hover {
     justify-self: end;
 }
 
-/* Botón circular pequeño para el tema en la pantalla inicial */
+/* Botón circular pequeño (cambio de tema en pantalla inicial) */
 .btn-circular {
     width: 40px;
     height: 40px;
@@ -152,7 +158,7 @@ body.op2 button:hover {
     justify-content: center;
 }
 
-/* Campos de Formulario */
+/* Estilos para campos de formulario (input) */
 .form-input {
     background: var(--color-card);
     color: var(--color-texto);
@@ -174,6 +180,7 @@ body.op2 button:hover {
     box-shadow: 0 0 0 3px rgba(255, 133, 162, 0.2);
 }
 
+/* Ajustes para campos de formulario en modo oscuro */
 body.op2 .form-input {
     background: var(--color-destacado);
 }
@@ -183,13 +190,14 @@ body.op2 .form-input:focus {
     box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.3);
 }
 
+/* Estilo específico para textarea */
 textarea.form-input {
     width: 90%;
     height: 120px;
     resize: vertical;
 }
 
-/* Visualización de Logros */
+/* Estilos para listas de logros */
 ul {
     list-style: none;
     padding: 0;
@@ -211,7 +219,7 @@ body.op2 li:hover {
     background: rgba(255, 182, 193, 0.1);
 }
 
-/* Marco uniforme de imagen (detalle y posibles usos futuros) */
+/* Contenedor de imagen */
 .contenedor-imagen, .imagen-logro {
     width: 220px;
     aspect-ratio: 4 / 3;
@@ -238,6 +246,7 @@ body.op2 .contenedor-imagen, body.op2 .imagen-logro {
     background: var(--color-destacado);
 }
 
+/* Estilo para el área de "Notas" en el detalle del logro */
 #detalle-notas {
     margin: 15px auto;
     text-align: left;
@@ -246,11 +255,11 @@ body.op2 .contenedor-imagen, body.op2 .imagen-logro {
     border-left: 5px solid var(--color-principal);
     border-radius: 6px;
     background: var(--color-card);
-    min-height: 80px;              /* recuadro con altura mínima */
+    min-height: 80px;
     line-height: 1.4;
-    white-space: pre-wrap;         /* respeta saltos de línea */
-    overflow-wrap: anywhere;       /* evita que palabras largas corten el layout */
-    word-break: break-word;        /* compatibilidad extra */
+    white-space: pre-wrap;         
+    overflow-wrap: anywhere;       
+    word-break: break-word;        
     box-sizing: border-box;
 }
 
@@ -264,65 +273,33 @@ body.op2 #detalle-notas {
     font-weight: 600;
 }
 
-/* Estrellas de dificultad */
 .dificultad-titulo {
     margin: 8px 0 6px;
     text-align: left;
     font-weight: 600;
 }
 
+/* Contenedor de estrellas de dificultad */
 .estrellas {
     display: inline-flex;
     gap: 4px;
-    font-size: 24px;            /* tamaño visual de estrellas */
+    font-size: 24px;
     line-height: 1;
     user-select: none;
-    margin: 8px 0 10px;         /* espaciado vertical sin título */
+    margin: 8px 0 10px;
 }
 
 .estrella {
-    cursor: default;             /* en detalle (no edición) */
-    color: #c9c9c9;              /* color vacío */
+    cursor: default;
+    color: #c9c9c9;
     transition: color 0.2s ease;
 }
 
-.estrella.activa {               /* estrellas llenas */
-    color: #f2c200;              /* amarillo */
+.estrella.activa {
+    color: #f2c200;
 }
 
-
-/* Botón de Tema */
-.btn-tema {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    z-index: 1000;
-    width: 50px;
-    height: 50px;
-    font-size: 22px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    background: var(--color-principal);
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s, background 0.3s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.btn-tema:hover {
-    transform: scale(1.1);
-}
-
-body.op2 .btn-tema {
-    background: var(--color-principal);
-    color: #1c1c1c;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* Adaptabilidad (Mobile) */
+/* Adaptabilidad para dispositivos móviles */
 @media (max-width: 600px) {
     section {
         margin: 20px 10px;
@@ -337,13 +314,5 @@ body.op2 .btn-tema {
         width: 100%;
         max-width: 100%;
         justify-content: center;
-    }
-
-    .btn-tema {
-        top: 15px;
-        right: 15px;
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
     }
 }
